@@ -1,0 +1,85 @@
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import '~src/variables.scss';
+
+html {
+    font-size: 62.5%;
+    position: relative;
+    min-height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+body {
+    font-family: 'Roboto', 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: $black;
+    letter-spacing: 0.5px;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('assets/Roboto-Light.ttf');
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('assets/Roboto-Regular.ttf');
+}
+
+h2 {
+    font-size: 1.8rem;
+    font-weight: 300;
+}
+
+h3 {
+    font-size: 1.6rem;
+    font-weight: 300;
+}
+
+h4 {
+    font-size: 1.4rem;
+    font-weight: 300;
+}
+
+div, p, a, select, label {
+    font-size: 1.2rem;
+    font-weight: 300;
+}
+
+button, input, textarea {
+    font-size: 1.2rem;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    border: none;
+    resize: none;
+
+    &:focus, &:active {
+        outline: none !important;
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &.btn {
+        font-size: 1.2rem;
+        font-weight: 300;
+        letter-spacing: 1.5px;
+    }
+}
+
+.footer-margin {
+    margin-bottom: 4rem;
+}
+
+ngb-typeahead-window.dropdown-menu {
+    max-width: 30vw;
+    font-size: 1.2rem;
+    overflow-y: hidden;
+
+    button.dropdown-item {
+        font-weight: 300;
+    }
+}
