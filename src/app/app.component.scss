@@ -1,0 +1,107 @@
+@import '~src/variables.scss';
+
+h3, div {
+    &.bg-sea-buckthorn-lighter {
+        background-color: lighten($sea-buckthorn, 10%);
+    }
+
+    &.bg-candlelight-lighter {
+        background-color: lighten($candlelight, 10%);
+    }
+}
+
+nav {
+    background-color: darken($river-bed, 15%);
+
+    a.logo {
+        height: 4rem;
+        font-size: 1.6rem;
+
+        &:link, &:hover {
+            text-decoration: none;
+        }
+
+        span.title {
+            font-weight: 300;
+            font-size: 2.4rem;
+            letter-spacing: 1.5px;
+            line-height: 4rem;
+            vertical-align: top;
+        }
+
+        img.logo {
+            vertical-align: initial;
+            height: 4rem;
+        }
+    }
+}
+
+div.input-block {
+    div.colour-cell {
+        color: $river-bed;
+        position: relative;
+
+        h3 {
+            font-weight: 400;
+
+            &.lighter {
+                font-weight: 300;
+            }
+        }
+
+        div {
+            &.input-group {
+                input[type=radio] {
+                    border: 0;
+                    width: 1.8rem;
+                    height: 1.8rem;
+                }
+
+                label {
+                    font-size: 1.4rem;
+                }
+            }
+        }
+
+        span.count {
+            position: absolute;
+            top: 1rem;
+            right: 0;
+        }
+    }
+
+    button {
+        &.show-insight, &.add {
+            font-weight: 400;
+            color: $alto-white;
+
+            &:hover {
+                background-color: darken($fruit-salad, 10%);
+            }
+        }
+    }
+}
+
+div.graph-block {
+
+}
+
+footer.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 4rem; /* Set the fixed height of the footer here */
+    line-height: 4rem; /* Vertically center the text there */
+    overflow-y: hidden;
+    white-space: nowrap;
+
+    a {
+        font-weight: 300;
+        font-size: 1.2rem;
+
+        &:hover {
+            color: $cerulean;
+            text-decoration: none;
+        }
+    }
+}
