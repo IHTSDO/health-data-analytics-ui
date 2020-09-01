@@ -71,6 +71,10 @@ div.input-block {
     }
 
     button {
+        &.add {
+            height: 2rem;
+        }
+
         &.show-insight, &.add {
             font-weight: 400;
             color: $alto-white;

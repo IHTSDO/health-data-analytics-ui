@@ -15,11 +15,17 @@
             <div class="colour-cell mb-4">
                 <h3 class="col p-3 mb-0 bg-candlelight rounded-top">Gender</h3>
                 <div class="input-group radios bg-candlelight-lighter rounded-bottom p-3">
-                    <input type="radio" id="gender-all" name="gender" class="p-2">
+                    <input type="radio" id="gender-all" name="gender" class="p-2"
+                           [checked]="comparison.gender === 'All'"
+                           (change)="comparison.gender = 'All'">
                     <label class="pl-2 pr-4 mb-0" for="gender-all">All</label>
-                    <input type="radio" id="gender-male" name="gender" class="p-2">
+                    <input type="radio" id="gender-male" name="gender" class="p-2"
+                           [checked]="comparison.gender === 'Male'"
+                           (change)="comparison.gender = 'Male'">
                     <label class="pl-2 pr-4 mb-0" for="gender-male">Male</label>
-                    <input type="radio" id="gender-female" name="gender" class="p-2">
+                    <input type="radio" id="gender-female" name="gender" class="p-2"
+                           [checked]="comparison.gender === 'Female'"
+                           (change)="comparison.gender = 'Female'">
                     <label class="pl-2 pr-4 mb-0" for="gender-female">Female</label>
                 </div>
             </div>
@@ -27,53 +33,64 @@
             <div class="colour-cell mb-4">
                 <h3 class="col p-3 mb-0 bg-candlelight rounded-top">Disorder</h3>
                 <div class="input-group bg-candlelight-lighter rounded-bottom p-3">
-                    <input class="rounded-pill p-1 px-3 w-100" placeholder="Search for Concept...">
+                    <input class="rounded-pill p-1 px-3 w-100"
+                           placeholder="Search for Concept..."
+                           [(ngModel)]="comparison.disorders.ecl"
+                           [ngbTypeahead]="search">
                 </div>
             </div>
 
-            <div class="colour-cell mb-4">
-                <h3 class="col p-3 mb-0 bg-candlelight rounded-top">Compare Outcome</h3>
-                <div class="input-group bg-candlelight-lighter rounded-bottom p-3">
-                    <input class="rounded-pill p-1 px-3 mb-3 w-100" placeholder="Search for Concept...">
-                    <input class="rounded-pill p-1 px-3 w-100" placeholder="Search for Concept...">
-                </div>
+            <div *ngIf="!comparison.controlGroup" class="mb-4 text-right">
+                <button class="button add bg-fruit-salad rounded-pill px-3"
+                        (click)="addControlGroup()">ADD CONTROL GROUP</button>
             </div>
 
-            <div class="colour-cell mb-4">
+            <div *ngIf="comparison.controlGroup" class="colour-cell mb-4">
                 <h3 class="col p-3 mb-0 lighter bg-sea-buckthorn rounded-top">No Comorbidities</h3>
                 <span class="col count text-right">~ 5.4k patients</span>
                 <h3 class="col p-3 mb-0 bg-sea-buckthorn-lighter rounded-bottom">Control Group</h3>
             </div>
 
-            <div class="colour-cell mb-4">
-                <h3 class="col p-3 mb-0 lighter bg-sea-buckthorn rounded-top">Diabetes</h3>
-                <span class="col count text-right">~ 1.2k patients</span>
-                <h3 class="col p-3 mb-0 bg-sea-buckthorn-lighter">Finding</h3>
-                <div class="input-group bg-sea-buckthorn-lighter rounded-bottom px-3">
-                    <input class="rounded-pill p-1 px-3 mb-3 w-100" placeholder="Search for Concept...">
+            <ng-container *ngFor="let comorbidity of comparison.comorbidities">
+                <div class="colour-cell mb-4">
+                    <h3 class="col p-3 mb-0 lighter bg-sea-buckthorn rounded-top">?namegoeshere?</h3>
+                    <span class="col count text-right">~ ?.?k patients</span>
+                    <h3 class="col p-3 mb-0 bg-sea-buckthorn-lighter">?finding?</h3>
+                    <div class="input-group bg-sea-buckthorn-lighter px-3">
+                        <ng-container *ngFor="let refinement of comorbidity.refinements">
+                            <input class="rounded-pill p-1 px-3 mb-3 w-100"
+                                   placeholder="Search for Concept..."
+                                   [(ngModel)]="refinement.ecl"
+                                   [ngbTypeahead]="search">
+                        </ng-container>
+                    </div>
+                    <div class="bg-sea-buckthorn-lighter rounded-bottom text-right p-3">
+                        <button class="button add bg-fruit-salad rounded-pill px-3"
+                                (click)="addRefinement(comorbidity)">ADD</button>
+                    </div>
                 </div>
+            </ng-container>
+
+            <div *ngIf="comparison.controlGroup" class="mb-4 text-right">
+                <button class="button add bg-fruit-salad rounded-pill px-3"
+                        (click)="addComorbidity()">ADD COMORBIDITY</button>
             </div>
 
             <div class="colour-cell mb-4">
-                <h3 class="col p-3 mb-0 lighter bg-sea-buckthorn rounded-top">Hypertension</h3>
-                <span class="col count text-right"></span>
-                <h3 class="col p-3 mb-0 bg-sea-buckthorn-lighter">Finding</h3>
-                <div class="input-group bg-sea-buckthorn-lighter rounded-bottom px-3">
-                    <input class="rounded-pill p-1 px-3 mb-3 w-100" placeholder="Search for Concept...">
+                <h3 class="col p-3 mb-0 bg-candlelight rounded-top">Compare Outcome</h3>
+                <h3 class="col p-3 mb-0 bg-candlelight-lighter">Comparators</h3>
+                <div class="input-group bg-candlelight-lighter px-3">
+                    <ng-container *ngFor="let comparator of comparison.comparators">
+                        <input class="rounded-pill p-1 px-3 mb-3 w-100"
+                               placeholder="Search for Concept..."
+                               [(ngModel)]="comparator.ecl"
+                               [ngbTypeahead]="search">
+                    </ng-container>
                 </div>
-            </div>
-
-            <div class="colour-cell mb-4">
-                <h3 class="col p-3 mb-0 lighter bg-sea-buckthorn rounded-top">Hypertension, not Obesity</h3>
-                <span class="col count text-right"></span>
-                <h3 class="col p-3 mb-0 bg-sea-buckthorn-lighter">Finding</h3>
-                <div class="input-group bg-sea-buckthorn-lighter rounded-bottom px-3">
-                    <input class="rounded-pill p-1 px-3 mb-3 w-100" placeholder="Search for Concept...">
+                <div class="bg-candlelight-lighter rounded-bottom text-right px-3 pb-3">
+                    <button class="button add bg-fruit-salad rounded-pill px-3"
+                            (click)="addComparator()">ADD</button>
                 </div>
-            </div>
-
-            <div class="mb-4 text-right">
-                <button class="button add bg-fruit-salad rounded-pill px-3 py-1">ADD</button>
             </div>
 
             <div class="mb-4 text-center">
@@ -81,7 +98,7 @@
             </div>
         </div>
         <div class="col-8 p-3">
-            <div class="p-3 m-3 rounded-lg">GRAPH GOES HERE</div>
+            <div class="p-3 m-3 rounded-lg">{{comparison | json}}</div>
         </div>
     </div>
 </div>
