@@ -18,6 +18,53 @@ import { SnomedUtilityService } from './services/snomedUtility/snomed-utility.se
 })
 export class AppComponent implements OnInit {
 
+    fakeData = [
+        {
+            'name': 'No Comorbidities',
+            'series': [
+                {
+                    'name': 'caught COVID-19',
+                    'value': 3250
+                },
+                {
+                    'name': 'Died',
+                    'value': 533
+                }
+            ]
+        },
+        {
+            'name': 'Diabetes',
+            'series': [
+                {
+                    'name': 'caught COVID-19',
+                    'value': 4800
+                },
+                {
+                    'name': 'Died',
+                    'value': 1024
+                }
+            ]
+        },
+        {
+            'name': 'Hypertension',
+            'series': [
+                {
+                    'name': 'caught COVID-19',
+                    'value': 4600
+                },
+                {
+                    'name': 'Died',
+                    'value': 400
+                }
+            ]
+        }
+    ];
+
+    // options
+    colorScheme = {
+        domain: ['#5AA454', '#C7B42C', '#AAAAAA']
+    };
+
     versions: object;
     environment: string;
     year: number = new Date().getFullYear();
@@ -112,7 +159,7 @@ export class AppComponent implements OnInit {
         this.healthAnalyticsService.getReport(reportDefinition).subscribe(data => {
 
             let count = 0;
-            data['groups'].forEach((item, index) => {
+            data['groups'].forEach(item => {
                 count += item.patientCount;
             });
             comorbidity.patientCount = count;
@@ -130,6 +177,20 @@ export class AppComponent implements OnInit {
     addComparator() {
         this.comparison.comparators.push(new Reference(''));
     }
+
+
+    onSelect(data): void {
+        console.log('Item clicked', JSON.parse(JSON.stringify(data)));
+    }
+
+    onActivate(data): void {
+        console.log('Activate', JSON.parse(JSON.stringify(data)));
+    }
+
+    onDeactivate(data): void {
+        console.log('Deactivate', JSON.parse(JSON.stringify(data)));
+    }
+
 
     assignFavicon() {
         const favicon = $('#favicon');

@@ -108,5 +108,44 @@ ngb-typeahead-window.dropdown-menu {
     }
 }
 
-//html, body { height: 100%; }
-//body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.ngx-charts {
+    text {
+        font-family: 'Helvetica Neue', 'Roboto', 'Arial', sans-serif;
+        font-size: 1.6rem !important;
+        font-weight: 300;
+        fill: $alto-white;
+        letter-spacing: 0.5px;
+    }
+}
+
+.chart-legend {
+    span {
+        &.legend-title-text {
+            font-family: 'Helvetica Neue', 'Roboto', 'Arial', sans-serif;
+            font-size: 1.6rem !important;
+            font-weight: 300;
+            fill: $alto-white;
+            letter-spacing: 0.5px;
+        }
+
+        &.legend-label-text {
+            font-family: 'Helvetica Neue', 'Roboto', 'Arial', sans-serif;
+            font-size: 1.2rem !important;
+            font-weight: 300;
+            fill: $alto-white;
+            letter-spacing: 0.5px;
+        }
+    }
+
+    .legend-label {
+        &:hover {
+            color: $white !important;
+        }
+
+        .active {
+            .legend-label-text {
+                color: $white !important;
+            }
+        }
+    }
+}

@@ -37,6 +37,10 @@ nav {
 }
 
 div.input-block {
+    h2 {
+        font-weight: 300;
+    }
+
     div.colour-cell {
         color: $river-bed;
         position: relative;
@@ -87,7 +91,6 @@ div.input-block {
 }
 
 div.graph-block {
-
 }
 
 footer.footer {

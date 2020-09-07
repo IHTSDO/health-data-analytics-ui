@@ -4,9 +4,9 @@
         <span class="title text-alto-white pl-3">Outcome Comparison - COVID</span>
     </a>
 </nav>
-<div class="input-block container-fluid">
+<div class="container-fluid">
     <div class="row">
-        <div class="col m-5 rounded-lg bg-river-bed">
+        <div class="input-block col m-5 rounded-lg bg-river-bed">
             <div class="row py-3">
                 <h2 class="col mb-0">Patient Criteria</h2>
             </div>
@@ -97,11 +97,26 @@
                 <button class="button show-insight bg-fruit-salad rounded-lg p-3">SHOW INSIGHT</button>
             </div>
         </div>
-        <div class="col-8 p-3">
-            <p>384151000119104</p>
-            <p>566571000119105</p>
-            <p>122548005</p>
-            <div class="p-3 m-3 rounded-lg">{{comparison | json}}</div>
+        <div class="graph-block col-8 m-5">
+            <!--<p>384151000119104</p>-->
+            <!--<p>566571000119105</p>-->
+            <!--<p>122548005</p>-->
+            <!--<div class="p-3 m-3 rounded-lg">{{comparison | json}}</div>-->
+            <ngx-charts-bar-vertical-2d
+                [scheme]="colorScheme"
+                [results]="fakeData"
+                [gradient]="true"
+                [xAxis]="true"
+                [yAxis]="true"
+                [legend]="true"
+                [showXAxisLabel]="true"
+                [showYAxisLabel]="true"
+                [yAxisLabel]="'Patients'"
+                [legendTitle]="'Key'"
+                (select)="onSelect($event)"
+                (activate)="onActivate($event)"
+                (deactivate)="onDeactivate($event)">
+            </ngx-charts-bar-vertical-2d>
         </div>
     </div>
 </div>

@@ -37,32 +37,3 @@ export class EncounterCriteria {
         this.conceptECL = conceptECL;
     }
 }
-
-
-
-
-
-
-
-// export class Cohort {
-//     gender: string;
-//     encounterCriteria: EncounterCriteria[];
-//
-//     constructor(gender, encounterCriteria) {
-//         this.gender = gender;
-//         this.encounterCriteria = encounterCriteria;
-//     }
-// }
-//
-// export class EncounterCriteria {
-//     conceptECL: string;
-//
-//     constructor(conceptECL) {
-//         this.conceptECL = conceptECL;
-//     }
-// }
-//
-// export class Group {
-//     criteria: Cohort;
-// }
-
