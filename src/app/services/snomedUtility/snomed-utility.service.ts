@@ -48,6 +48,10 @@ export class SnomedUtilityService {
         return input.replace(/\D/g, '');
     }
 
+    static getPreferredTermFromFsn(input): string {
+        return input.substring(input.indexOf('|') + 1, input.lastIndexOf('(')).trim();
+    }
+
     // Takes a string ETL expression and returns an array of ETL expression lines, correctly indented.
     static ETLexpressionBuilder(expression: string) {
         const response = expression.match(/(?:[^:,](?!OR))+(?:[:,\s]| OR)*/g);

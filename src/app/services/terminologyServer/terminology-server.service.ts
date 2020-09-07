@@ -21,15 +21,9 @@ export class TerminologyServerService {
     }
 
     getTypeahead(term) {
-        const params = {
-            termFilter: term,
-            limit: 20,
-            expand: 'fsn()',
-            activeFilter: true,
-            termActive: true
-        };
         return this.http
-            .post(this.authoringService.uiConfiguration.endpoints.terminologyServerEndpoint + this.branchPath + '/concepts/search', params)
+            .get(this.authoringService.uiConfiguration.endpoints.terminologyServerEndpoint + this.branchPath +
+                '/concepts?activeFilter=true&termActive=true&limit=20&term=' + term)
             .pipe(map(responseData => {
                 const typeaheads = [];
 

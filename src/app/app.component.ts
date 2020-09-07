@@ -7,6 +7,9 @@ import { Reference, Comparison, Comorbidity } from './models/comparison';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { TerminologyServerService } from './services/terminologyServer/terminology-server.service';
+import { HealthAnalyticsService } from './services/healthAnalytics/health-analytics.service';
+import { CohortCriteria, EncounterCriteria, ReportDefinition, SubReportDefinition } from './models/analyticsRequestObject';
+import { SnomedUtilityService } from './services/snomedUtility/snomed-utility.service';
 
 @Component({
     selector: 'app-root',
@@ -17,6 +20,7 @@ export class AppComponent implements OnInit {
 
     versions: object;
     environment: string;
+    year: number = new Date().getFullYear();
     comparison: Comparison;
 
     // typeahead
@@ -35,8 +39,8 @@ export class AppComponent implements OnInit {
     constructor(private authoringService: AuthoringService,
                 private branchingService: BranchingService,
                 private titleService: Title,
-                private terminologyService: TerminologyServerService) {
-
+                private terminologyService: TerminologyServerService,
+                private healthAnalyticsService: HealthAnalyticsService) {
     }
 
     ngOnInit() {
@@ -54,17 +58,65 @@ export class AppComponent implements OnInit {
         this.branchingService.setBranchPath('MAIN');
         this.assignFavicon();
 
-        this.setupComparator();
+        this.setupComparisonObject();
     }
 
-    setupComparator() {
-        this.comparison = new Comparison('All', new Reference(''), [], []);
+    setupComparisonObject() {
+        this.comparison = new Comparison(null, new Reference(''), [], []);
         this.comparison.comparators.push(new Reference(''));
         this.comparison.comparators.push(new Reference(''));
+
+        this.changeGender(null);
     }
 
-    addControlGroup() {
-        this.comparison.controlGroup = true;
+    changeGender(gender) {
+        this.comparison.gender = gender;
+
+        this.healthAnalyticsService.getCohort(new CohortCriteria(this.comparison.gender, [])).subscribe(data => {
+            this.comparison.cohort = data['totalElements'];
+        });
+
+        if (this.comparison.disorder.ecl) {
+            this.changeDisorder(this.comparison.disorder.ecl);
+        }
+    }
+
+    changeDisorder(disorder) {
+        this.healthAnalyticsService.getCohort(new CohortCriteria(this.comparison.gender, [new EncounterCriteria(disorder)]))
+            .subscribe(data => {
+            this.comparison.disorder.cohort = data['totalElements'];
+        });
+    }
+
+    changeComorbidity(comorbidity) {
+        comorbidity.name = '';
+
+        comorbidity.refinements.forEach(item => {
+            item.name = SnomedUtilityService.getPreferredTermFromFsn(item.ecl);
+            comorbidity.name += item.name + ', ';
+        });
+
+        comorbidity.name = comorbidity.name.substring(0, comorbidity.name.length - 2);
+
+        ////////////////////
+
+        const reportDefinition = new ReportDefinition(null, [[]], '');
+
+        reportDefinition.criteria = new CohortCriteria(this.comparison.gender, [new EncounterCriteria(this.comparison.disorder.ecl)]);
+
+        comorbidity.refinements.forEach(item => {
+            reportDefinition.groups[0].push(new SubReportDefinition(new CohortCriteria(
+                this.comparison.gender, [new EncounterCriteria(item.ecl)]), ''));
+        });
+
+        this.healthAnalyticsService.getReport(reportDefinition).subscribe(data => {
+
+            let count = 0;
+            data['groups'].forEach((item, index) => {
+                count += item.patientCount;
+            });
+            comorbidity.patientCount = count;
+        });
     }
 
     addComorbidity() {

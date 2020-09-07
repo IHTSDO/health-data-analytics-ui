@@ -1,13 +1,13 @@
 export class Comparison {
     gender: string;
-    disorders: Reference;
-    controlGroup: boolean;
+    cohort: string;
+    disorder: Reference;
     comorbidities: Comorbidity[];
     comparators: Reference[];
 
-    constructor(gender, disorders, comorbidities, comparators) {
+    constructor(gender, disorder, comorbidities, comparators) {
         this.gender = gender;
-        this.disorders = disorders;
+        this.disorder = disorder;
         this.comorbidities = comorbidities;
         this.comparators = comparators;
     }
@@ -16,6 +16,7 @@ export class Comparison {
 export class Reference {
     ecl: string;
     name: string;
+    cohort: string;
 
     constructor(ecl) {
         this.ecl = ecl;
@@ -25,6 +26,7 @@ export class Reference {
 export class Comorbidity {
     name: string;
     refinements: Reference[];
+    patientCount: number;
 
     constructor(refinements) {
         this.refinements = refinements;

@@ -98,6 +98,7 @@ footer.footer {
     line-height: 4rem; /* Vertically center the text there */
     overflow-y: hidden;
     white-space: nowrap;
+    z-index: -1;
 
     a {
         font-weight: 300;
