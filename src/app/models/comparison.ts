@@ -1,13 +1,16 @@
 export class Comparison {
     gender: string;
-    cohort: string;
-    disorder: Reference;
+    condition: Reference[];
     comorbidities: Comorbidity[];
     comparators: Reference[];
+    cohort: number;
+    conditionCohort: number;
+    comorbidityCohort: number;
 
-    constructor(gender, disorder, comorbidities, comparators) {
+
+    constructor(gender, condition, comorbidities, comparators) {
         this.gender = gender;
-        this.disorder = disorder;
+        this.condition = condition;
         this.comorbidities = comorbidities;
         this.comparators = comparators;
     }
@@ -16,10 +19,11 @@ export class Comparison {
 export class Reference {
     ecl: string;
     name: string;
-    cohort: string;
+    type: string;
 
-    constructor(ecl) {
+    constructor(ecl, type?) {
         this.ecl = ecl;
+        this.type = type;
     }
 }
 

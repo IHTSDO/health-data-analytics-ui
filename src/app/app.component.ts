@@ -109,9 +109,10 @@ export class AppComponent implements OnInit {
     }
 
     setupComparisonObject() {
-        this.comparison = new Comparison(null, new Reference(''), [], []);
+        this.comparison = new Comparison(null, [], [], []);
         this.comparison.comparators.push(new Reference(''));
         this.comparison.comparators.push(new Reference(''));
+        this.comparison.comorbidityCohort = 0;
 
         this.changeGender(null);
     }
@@ -121,17 +122,54 @@ export class AppComponent implements OnInit {
 
         this.healthAnalyticsService.getCohort(new CohortCriteria(this.comparison.gender, [])).subscribe(data => {
             this.comparison.cohort = data['totalElements'];
+            this.calculateComorbidityCohort();
         });
 
-        if (this.comparison.disorder.ecl) {
-            this.changeDisorder(this.comparison.disorder.ecl);
-        }
+        this.changeCondition();
     }
 
-    changeDisorder(disorder) {
-        this.healthAnalyticsService.getCohort(new CohortCriteria(this.comparison.gender, [new EncounterCriteria(disorder)]))
-            .subscribe(data => {
-            this.comparison.disorder.cohort = data['totalElements'];
+    changeCondition() {
+        const encounterCriteria = [];
+
+        this.comparison.condition.forEach(item => {
+            encounterCriteria.push(new EncounterCriteria(item.ecl));
+        });
+
+        this.healthAnalyticsService.getCohort(new CohortCriteria(this.comparison.gender, encounterCriteria)).subscribe(data => {
+            this.comparison.conditionCohort = data['totalElements'];
+            this.calculateComorbidityCohort();
+        });
+    }
+
+    addCondition(type) {
+        this.comparison.condition.push(new Reference('', type));
+    }
+
+    addComparator() {
+        this.comparison.comparators.push(new Reference(''));
+    }
+
+    addComorbidity() {
+        this.comparison.comorbidities.push(new Comorbidity([new Reference('')]));
+    }
+
+    addComorbidityReference(comorbidity) {
+        comorbidity.refinements.push(new Reference(''));
+    }
+
+    calculateComorbidityCohort() {
+        let count = this.comparison.conditionCohort;
+        this.comparison.comorbidities.forEach(item => {
+
+            count -= item.patientCount;
+        });
+
+        this.comparison.comorbidityCohort = count;
+    }
+
+    exists(name) {
+        return this.comparison.condition.find(item => {
+            return item.type === name;
         });
     }
 
@@ -148,8 +186,13 @@ export class AppComponent implements OnInit {
         ////////////////////
 
         const reportDefinition = new ReportDefinition(null, [[]], '');
+        const encounterCriteria = [];
 
-        reportDefinition.criteria = new CohortCriteria(this.comparison.gender, [new EncounterCriteria(this.comparison.disorder.ecl)]);
+        this.comparison.condition.forEach(item => {
+            encounterCriteria.push(new EncounterCriteria(item.ecl));
+        });
+
+        reportDefinition.criteria = new CohortCriteria(this.comparison.gender, encounterCriteria);
 
         comorbidity.refinements.forEach(item => {
             reportDefinition.groups[0].push(new SubReportDefinition(new CohortCriteria(
@@ -157,26 +200,27 @@ export class AppComponent implements OnInit {
         });
 
         this.healthAnalyticsService.getReport(reportDefinition).subscribe(data => {
-
             let count = 0;
+
             data['groups'].forEach(item => {
                 count += item.patientCount;
             });
+
             comorbidity.patientCount = count;
+            this.calculateComorbidityCohort();
         });
     }
 
-    addComorbidity() {
-        this.comparison.comorbidities.push(new Comorbidity([new Reference('')]));
-    }
 
-    addRefinement(comorbidity) {
-        comorbidity.refinements.push(new Reference(''));
-    }
 
-    addComparator() {
-        this.comparison.comparators.push(new Reference(''));
-    }
+
+
+
+
+
+
+
+
 
 
     onSelect(data): void {
