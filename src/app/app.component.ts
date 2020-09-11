@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
             ]
         },
         {
-            'name': 'Diabetes',
+            'name': 'Mammography of Right Breast',
             'series': [
                 {
                     'name': 'caught COVID-19',
@@ -47,7 +47,7 @@ export class AppComponent implements OnInit {
             ]
         },
         {
-            'name': 'Hypertension',
+            'name': 'Biopsy of Breast',
             'series': [
                 {
                     'name': 'caught COVID-19',
@@ -56,48 +56,6 @@ export class AppComponent implements OnInit {
                 {
                     'name': 'Died',
                     'value': 400
-                }
-            ]
-        }
-    ];
-
-    fakeData2 = [
-        {
-            'name': 'No Comorbidities',
-            'series': [
-                {
-                    'name': 'caught COVID-19',
-                    'value': 100
-                },
-                {
-                    'name': 'Died',
-                    'value': 2000
-                }
-            ]
-        },
-        {
-            'name': 'Diabetes',
-            'series': [
-                {
-                    'name': 'caught COVID-19',
-                    'value': 300
-                },
-                {
-                    'name': 'Died',
-                    'value': 90
-                }
-            ]
-        },
-        {
-            'name': 'Hypertension',
-            'series': [
-                {
-                    'name': 'caught COVID-19',
-                    'value': 1200
-                },
-                {
-                    'name': 'Died',
-                    'value': 6000
                 }
             ]
         }
@@ -230,7 +188,65 @@ export class AppComponent implements OnInit {
     changeComorbidity(comorbidity) {
         this.assignComorbidityName(comorbidity);
 
-        this.healthAnalyticsService.getReport(this.buildReport(comorbidity)).subscribe(data => {
+        // Create new Report for submission to API
+        const reportDefinition = new ReportDefinition(null, [], 'COVID-19 Comorbidity Affects');
+
+        // Create new Criteria for the Report
+        const encounterCriteria = [];
+
+        this.comparison.condition.forEach(item => {
+            encounterCriteria.push(new EncounterCriteria(item.ecl));
+        });
+
+        reportDefinition.criteria = new CohortCriteria(this.comparison.gender, encounterCriteria);
+
+        // Create new Comorbidity array for the groups array
+        const comorbidityArray = [];
+
+        this.comparison.comorbidities.forEach(item => {
+            const comorbidityEncounterCriteria = [];
+
+            item.refinements.forEach(nestedItem => {
+                comorbidityEncounterCriteria.push(new EncounterCriteria(nestedItem.ecl));
+            });
+
+            comorbidityArray.push(new SubReportDefinition(new CohortCriteria(
+                this.comparison.gender, comorbidityEncounterCriteria), item.name));
+        });
+
+        // Create new control group object for comorbidity array
+        const controlGroupEncounterCriteria = [];
+
+        this.comparison.comorbidities.forEach(item => {
+
+            item.refinements.forEach(nestedItem => {
+                controlGroupEncounterCriteria.push(new EncounterCriteria(nestedItem.ecl, false));
+            });
+        });
+
+        const controlGroup = new SubReportDefinition(new CohortCriteria(this.comparison.gender, controlGroupEncounterCriteria), 'Control Group');
+
+        comorbidityArray.unshift(controlGroup);
+
+        reportDefinition.groups.push(comorbidityArray);
+
+        // Create new Comparator array for the groups array
+
+        const comparatorArray = [];
+
+        this.comparison.comparators.forEach(item => {
+            if (item.ecl) {
+                comparatorArray.push(new SubReportDefinition(new CohortCriteria(
+                    this.comparison.gender, [new EncounterCriteria(item.ecl)]), item.name));
+            }
+        });
+
+        reportDefinition.groups.push(comparatorArray);
+
+        // Here, not working?
+
+        this.healthAnalyticsService.getReport(reportDefinition).subscribe(data => {
+            console.log('DATA: ', data);
             let count = 0;
 
             data['groups'].forEach(item => {
@@ -242,7 +258,9 @@ export class AppComponent implements OnInit {
         });
     }
 
-    buildReport(comorbidity) {
+    showInsight() {
+        // this.fakeData = this.fakeData2;
+
         const reportDefinition = new ReportDefinition(null, [[]], '');
         const encounterCriteria = [];
 
@@ -252,28 +270,20 @@ export class AppComponent implements OnInit {
 
         reportDefinition.criteria = new CohortCriteria(this.comparison.gender, encounterCriteria);
 
-        comorbidity.refinements.forEach(item => {
-            reportDefinition.groups[0].push(new SubReportDefinition(new CohortCriteria(
-                this.comparison.gender, [new EncounterCriteria(item.ecl)]), ''));
+        this.comparison.comorbidities.forEach(comorbidity => {
+            comorbidity.refinements.forEach(item => {
+                reportDefinition.groups[0].push(new SubReportDefinition(new CohortCriteria(
+                    this.comparison.gender, [new EncounterCriteria(item.ecl)]), ''));
+            });
         });
 
-        return reportDefinition;
-    }
+        console.log('POSTING: ', reportDefinition);
 
-    showInsight() {
-        // this.fakeData = this.fakeData2;
-        //
-        // this.healthAnalyticsService.getReport(this.buildReport(comorbidity)).subscribe(data => {
-        //     let count = 0;
-        //
-        //     data['groups'].forEach(item => {
-        //         count += item.patientCount;
-        //     });
-        //
-        //     comorbidity.patientCount = count;
-        //     this.calculateComorbidityCohort();
-        // });
-        //
+        this.healthAnalyticsService.getReport(reportDefinition).subscribe(data => {
+            console.log('RETURNING: ', data);
+        });
+
+
         // const graphData = [];
         // graphData.push(new GraphObject('name', new DataPoint('name2', 1)));
     }
