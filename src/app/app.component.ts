@@ -10,6 +10,7 @@ import { TerminologyServerService } from './services/terminologyServer/terminolo
 import { HealthAnalyticsService } from './services/healthAnalytics/health-analytics.service';
 import { CohortCriteria, EncounterCriteria, ReportDefinition, SubReportDefinition } from './models/analyticsRequestObject';
 import { SnomedUtilityService } from './services/snomedUtility/snomed-utility.service';
+import { DataPoint, GraphObject } from './models/graphObject';
 
 @Component({
     selector: 'app-root',
@@ -55,6 +56,48 @@ export class AppComponent implements OnInit {
                 {
                     'name': 'Died',
                     'value': 400
+                }
+            ]
+        }
+    ];
+
+    fakeData2 = [
+        {
+            'name': 'No Comorbidities',
+            'series': [
+                {
+                    'name': 'caught COVID-19',
+                    'value': 100
+                },
+                {
+                    'name': 'Died',
+                    'value': 2000
+                }
+            ]
+        },
+        {
+            'name': 'Diabetes',
+            'series': [
+                {
+                    'name': 'caught COVID-19',
+                    'value': 300
+                },
+                {
+                    'name': 'Died',
+                    'value': 90
+                }
+            ]
+        },
+        {
+            'name': 'Hypertension',
+            'series': [
+                {
+                    'name': 'caught COVID-19',
+                    'value': 1200
+                },
+                {
+                    'name': 'Died',
+                    'value': 6000
                 }
             ]
         }
@@ -173,7 +216,7 @@ export class AppComponent implements OnInit {
         });
     }
 
-    changeComorbidity(comorbidity) {
+    assignComorbidityName(comorbidity) {
         comorbidity.name = '';
 
         comorbidity.refinements.forEach(item => {
@@ -182,9 +225,24 @@ export class AppComponent implements OnInit {
         });
 
         comorbidity.name = comorbidity.name.substring(0, comorbidity.name.length - 2);
+    }
 
-        ////////////////////
+    changeComorbidity(comorbidity) {
+        this.assignComorbidityName(comorbidity);
 
+        this.healthAnalyticsService.getReport(this.buildReport(comorbidity)).subscribe(data => {
+            let count = 0;
+
+            data['groups'].forEach(item => {
+                count += item.patientCount;
+            });
+
+            comorbidity.patientCount = count;
+            this.calculateComorbidityCohort();
+        });
+    }
+
+    buildReport(comorbidity) {
         const reportDefinition = new ReportDefinition(null, [[]], '');
         const encounterCriteria = [];
 
@@ -199,7 +257,13 @@ export class AppComponent implements OnInit {
                 this.comparison.gender, [new EncounterCriteria(item.ecl)]), ''));
         });
 
-        this.healthAnalyticsService.getReport(reportDefinition).subscribe(data => {
+        return reportDefinition;
+    }
+
+    showInsight() {
+        this.fakeData = this.fakeData2;
+
+        this.healthAnalyticsService.getReport(this.buildReport(comorbidity)).subscribe(data => {
             let count = 0;
 
             data['groups'].forEach(item => {
@@ -209,9 +273,10 @@ export class AppComponent implements OnInit {
             comorbidity.patientCount = count;
             this.calculateComorbidityCohort();
         });
+
+        const graphData = [];
+        graphData.push(new GraphObject('name', new DataPoint('name2', 1)));
     }
-
-
 
 
 

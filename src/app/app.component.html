@@ -34,7 +34,7 @@
                 <h3 class="col p-3 mb-0 bg-candlelight rounded-top">Condition</h3>
                 <span class="col count text-right">{{comparison?.conditionCohort ? (comparison.conditionCohort | number:'1.0-0') : '0'}} patients</span>
                 <ng-container *ngIf="exists('finding')">
-                    <h3 class="col px-3 pt-3 mb-0 bg-candlelight-lighter">Finding</h3>
+                    <h3 class="col px-3 mb-0 bg-candlelight-lighter">Finding</h3>
                     <div class="input-group bg-candlelight-lighter px-3">
                         <ng-container *ngFor="let condition of comparison.condition">
                             <input *ngIf="condition.type === 'finding'" class="rounded-pill p-1 px-3 mb-3 w-100"
@@ -46,7 +46,7 @@
                     </div>
                 </ng-container>
                 <ng-container *ngIf="exists('disorder')">
-                    <h3 class="col px-3 pt-3 mb-0 bg-candlelight-lighter">Disorder</h3>
+                    <h3 class="col px-3 mb-0 bg-candlelight-lighter">Disorder</h3>
                     <div class="input-group bg-candlelight-lighter px-3">
                         <ng-container *ngFor="let condition of comparison.condition">
                             <input *ngIf="condition.type === 'disorder'" class="rounded-pill p-1 px-3 mb-3 w-100"
@@ -58,7 +58,7 @@
                     </div>
                 </ng-container>
                 <ng-container *ngIf="exists('medication')">
-                    <h3 class="col px-3 pt-3 mb-0 bg-candlelight-lighter">Medication</h3>
+                    <h3 class="col px-3 mb-0 bg-candlelight-lighter">Medication</h3>
                     <div class="input-group bg-candlelight-lighter px-3">
                         <ng-container *ngFor="let condition of comparison.condition">
                             <input *ngIf="condition.type === 'medication'" class="rounded-pill p-1 px-3 mb-3 w-100"
@@ -70,7 +70,7 @@
                     </div>
                 </ng-container>
                 <ng-container *ngIf="exists('procedure')">
-                    <h3 class="col px-3 pt-3 mb-0 bg-candlelight-lighter">Procedure</h3>
+                    <h3 class="col px-3 mb-0 bg-candlelight-lighter">Procedure</h3>
                     <div class="input-group bg-candlelight-lighter px-3">
                         <ng-container *ngFor="let condition of comparison.condition">
                             <input *ngIf="condition.type === 'procedure'" class="rounded-pill p-1 px-3 mb-3 w-100"
@@ -149,14 +149,14 @@
             </div>
 
             <div class="mb-4 text-center">
-                <button class="button show-insight bg-fruit-salad rounded-lg p-3">SHOW INSIGHT</button>
+                <button class="button show-insight bg-fruit-salad rounded-lg p-3" (click)="showInsight()">SHOW INSIGHT</button>
             </div>
         </div>
         <div class="graph-block col-8 m-5">
-            <p>384151000119104</p>
-            <p>566571000119105</p>
-            <p>122548005</p>
-            <div class="p-3 m-3 rounded-lg">{{comparison | json}}</div>
+            <!--<p>384151000119104</p>-->
+            <!--<p>566571000119105</p>-->
+            <!--<p>122548005</p>-->
+            <!--<div class="p-3 m-3 rounded-lg">{{comparison | json}}</div>-->
             <ngx-charts-bar-vertical-2d
                 [scheme]="colorScheme"
                 [results]="fakeData"
