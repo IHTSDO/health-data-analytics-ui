@@ -261,21 +261,21 @@ export class AppComponent implements OnInit {
     }
 
     showInsight() {
-        this.fakeData = this.fakeData2;
-
-        this.healthAnalyticsService.getReport(this.buildReport(comorbidity)).subscribe(data => {
-            let count = 0;
-
-            data['groups'].forEach(item => {
-                count += item.patientCount;
-            });
-
-            comorbidity.patientCount = count;
-            this.calculateComorbidityCohort();
-        });
-
-        const graphData = [];
-        graphData.push(new GraphObject('name', new DataPoint('name2', 1)));
+        // this.fakeData = this.fakeData2;
+        //
+        // this.healthAnalyticsService.getReport(this.buildReport(comorbidity)).subscribe(data => {
+        //     let count = 0;
+        //
+        //     data['groups'].forEach(item => {
+        //         count += item.patientCount;
+        //     });
+        //
+        //     comorbidity.patientCount = count;
+        //     this.calculateComorbidityCohort();
+        // });
+        //
+        // const graphData = [];
+        // graphData.push(new GraphObject('name', new DataPoint('name2', 1)));
     }
 
 
