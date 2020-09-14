@@ -37,6 +37,9 @@ nav {
 }
 
 div.input-block {
+    overflow: scroll;
+    max-height: calc(100vh - 11rem);
+
     h2 {
         font-weight: 300;
     }
@@ -91,6 +94,7 @@ div.input-block {
 }
 
 div.graph-block {
+    max-height: calc(100vh - 11rem);
 }
 
 footer.footer {

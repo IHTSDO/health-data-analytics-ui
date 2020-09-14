@@ -10,7 +10,7 @@ import { TerminologyServerService } from './services/terminologyServer/terminolo
 import { HealthAnalyticsService } from './services/healthAnalytics/health-analytics.service';
 import { CohortCriteria, EncounterCriteria, ReportDefinition, SubReportDefinition } from './models/analyticsRequestObject';
 import { SnomedUtilityService } from './services/snomedUtility/snomed-utility.service';
-import { DataPoint, GraphObject } from './models/graphObject';
+import { Series, GraphObject } from './models/graphObject';
 
 @Component({
     selector: 'app-root',
@@ -19,47 +19,7 @@ import { DataPoint, GraphObject } from './models/graphObject';
 })
 export class AppComponent implements OnInit {
 
-    fakeData = [
-        {
-            'name': 'No Comorbidities',
-            'series': [
-                {
-                    'name': 'caught COVID-19',
-                    'value': 3250
-                },
-                {
-                    'name': 'Died',
-                    'value': 533
-                }
-            ]
-        },
-        {
-            'name': 'Mammography of Right Breast',
-            'series': [
-                {
-                    'name': 'caught COVID-19',
-                    'value': 4800
-                },
-                {
-                    'name': 'Died',
-                    'value': 1024
-                }
-            ]
-        },
-        {
-            'name': 'Biopsy of Breast',
-            'series': [
-                {
-                    'name': 'caught COVID-19',
-                    'value': 4600
-                },
-                {
-                    'name': 'Died',
-                    'value': 400
-                }
-            ]
-        }
-    ];
+    graphData = [];
 
     // options
     colorScheme = {
@@ -118,6 +78,7 @@ export class AppComponent implements OnInit {
         this.changeGender(null);
     }
 
+    // GENDER FUNCTIONS
     changeGender(gender) {
         this.comparison.gender = gender;
 
@@ -129,10 +90,16 @@ export class AppComponent implements OnInit {
         this.changeCondition();
     }
 
+    // CONDITION FUNCTIONS
+    addCondition(type) {
+        this.comparison.condition.push(new Reference('', type));
+    }
+
     changeCondition() {
         const encounterCriteria = [];
 
         this.comparison.condition.forEach(item => {
+            item.ecl = this.addECLPrefix(item.ecl);
             encounterCriteria.push(new EncounterCriteria(item.ecl));
         });
 
@@ -142,36 +109,34 @@ export class AppComponent implements OnInit {
         });
     }
 
-    addCondition(type) {
-        this.comparison.condition.push(new Reference('', type));
+    exists(name) {
+        return this.comparison.condition.find(item => {
+            return item.type === name;
+        });
     }
 
+    // COMPARATOR FUNCTIONS
     addComparator() {
         this.comparison.comparators.push(new Reference(''));
     }
 
+    assignComparatorName(comparator) {
+        comparator.name = SnomedUtilityService.getPreferredTermFromFsn(comparator.ecl);
+    }
+
+    changeComparator(comparator) {
+        this.assignComparatorName(comparator);
+        comparator.ecl = this.addECLPrefix(comparator.ecl);
+    }
+
+
+    // COMORBIDITY FUNCTIONS
     addComorbidity() {
         this.comparison.comorbidities.push(new Comorbidity([new Reference('')]));
     }
 
     addComorbidityReference(comorbidity) {
         comorbidity.refinements.push(new Reference(''));
-    }
-
-    calculateComorbidityCohort() {
-        let count = this.comparison.conditionCohort;
-        this.comparison.comorbidities.forEach(item => {
-
-            count -= item.patientCount;
-        });
-
-        this.comparison.comorbidityCohort = count;
-    }
-
-    exists(name) {
-        return this.comparison.condition.find(item => {
-            return item.type === name;
-        });
     }
 
     assignComorbidityName(comorbidity) {
@@ -187,7 +152,100 @@ export class AppComponent implements OnInit {
 
     changeComorbidity(comorbidity) {
         this.assignComorbidityName(comorbidity);
+        comorbidity.ecl = this.addECLPrefix(comorbidity.ecl);
 
+        // Create new Report for submission to API
+        const reportDefinition = new ReportDefinition(null, [], 'COVID-19 Comorbidity Affects');
+
+        // Create new Criteria for the Report
+        const encounterCriteria = [];
+
+        this.comparison.condition.forEach(item => {
+            encounterCriteria.push(new EncounterCriteria(item.ecl));
+        });
+
+        reportDefinition.criteria = new CohortCriteria(this.comparison.gender, encounterCriteria);
+
+        // Create new Comorbidity array for the groups array
+        const comorbidityArray = [];
+
+        this.comparison.comorbidities.forEach(item => {
+            const comorbidityEncounterCriteria = [];
+
+            item.refinements.forEach(nestedItem => {
+                nestedItem.ecl = this.addECLPrefix(nestedItem.ecl);
+                comorbidityEncounterCriteria.push(new EncounterCriteria(nestedItem.ecl));
+            });
+
+            comorbidityArray.push(new SubReportDefinition(new CohortCriteria(
+                this.comparison.gender, comorbidityEncounterCriteria), item.name));
+        });
+
+        // Create new control group object for comorbidity array
+        const controlGroupEncounterCriteria = [];
+
+        this.comparison.comorbidities.forEach(item => {
+
+            item.refinements.forEach(nestedItem => {
+                controlGroupEncounterCriteria.push(new EncounterCriteria(nestedItem.ecl, false));
+            });
+        });
+
+        const controlGroup = new SubReportDefinition(new CohortCriteria(this.comparison.gender, controlGroupEncounterCriteria), 'Control Group');
+
+        comorbidityArray.unshift(controlGroup);
+
+        reportDefinition.groups.push(comorbidityArray);
+
+        // Create new Comparator array for the groups array
+
+        const comparatorArray = [];
+
+        this.comparison.comparators.forEach(item => {
+            if (item.ecl) {
+                comparatorArray.push(new SubReportDefinition(new CohortCriteria(
+                    this.comparison.gender, [new EncounterCriteria(item.ecl)]), item.name));
+            }
+        });
+
+        reportDefinition.groups.push(comparatorArray);
+
+        this.healthAnalyticsService.getReport(reportDefinition).subscribe(data => {
+
+            let comorbidityCohort = 0;
+
+            data['groups'].forEach(item => {
+                this.comparison.comorbidities.forEach(response => {
+                    if (response.name === item.name) {
+                        response.patientCount = item['patientCount'];
+                    }
+                });
+
+                if (item.name === 'Control Group') {
+                    comorbidityCohort = item.patientCount;
+                }
+            });
+
+            this.calculateComorbidityCohort(comorbidityCohort);
+        });
+    }
+
+    calculateComorbidityCohort(comorbidityCohort?) {
+        if (comorbidityCohort) {
+            this.comparison.comorbidityCohort = comorbidityCohort;
+        } else {
+            let count = this.comparison.conditionCohort;
+            this.comparison.comorbidities.forEach(item => {
+
+                count -= item.patientCount;
+            });
+
+            this.comparison.comorbidityCohort = count;
+        }
+    }
+
+    // GRAPH FUNCTIONS
+    showInsight() {
         // Create new Report for submission to API
         const reportDefinition = new ReportDefinition(null, [], 'COVID-19 Comorbidity Affects');
 
@@ -243,60 +301,40 @@ export class AppComponent implements OnInit {
 
         reportDefinition.groups.push(comparatorArray);
 
-        // Here, not working?
-
         this.healthAnalyticsService.getReport(reportDefinition).subscribe(data => {
-            console.log('DATA: ', data);
-            let count = 0;
 
-            data['groups'].forEach(item => {
-                count += item.patientCount;
-            });
-
-            comorbidity.patientCount = count;
-            this.calculateComorbidityCohort();
+            this.buildGraph(data);
         });
     }
 
-    showInsight() {
-        // this.fakeData = this.fakeData2;
+    buildGraph(dataSet) {
+        console.log('RAW: ', dataSet);
 
-        const reportDefinition = new ReportDefinition(null, [[]], '');
-        const encounterCriteria = [];
+        const graphData = [];
 
-        this.comparison.condition.forEach(item => {
-            encounterCriteria.push(new EncounterCriteria(item.ecl));
-        });
+        dataSet.groups.forEach(data => {
+            const seriesSet = [];
 
-        reportDefinition.criteria = new CohortCriteria(this.comparison.gender, encounterCriteria);
-
-        this.comparison.comorbidities.forEach(comorbidity => {
-            comorbidity.refinements.forEach(item => {
-                reportDefinition.groups[0].push(new SubReportDefinition(new CohortCriteria(
-                    this.comparison.gender, [new EncounterCriteria(item.ecl)]), ''));
+            data.groups.forEach(item => {
+                seriesSet.push(new Series(item.name, item.patientCount));
             });
+
+            graphData.push(new GraphObject( data.name, seriesSet));
         });
 
-        console.log('POSTING: ', reportDefinition);
+        console.log('GRAPHDATA: ', graphData);
 
-        this.healthAnalyticsService.getReport(reportDefinition).subscribe(data => {
-            console.log('RETURNING: ', data);
-        });
-
-
-        // const graphData = [];
-        // graphData.push(new GraphObject('name', new DataPoint('name2', 1)));
+        this.graphData = graphData;
     }
 
-
-
-
-
-
-
-
-
-
+    // UTILITY FUNCTIONS
+    addECLPrefix(ecl) {
+        if (ecl && ecl.substring(0, 2) !== '<<') {
+            return '<<' + ecl;
+        } else {
+            return ecl;
+        }
+    }
 
     onSelect(data): void {
         console.log('Item clicked', JSON.parse(JSON.stringify(data)));
@@ -309,7 +347,6 @@ export class AppComponent implements OnInit {
     onDeactivate(data): void {
         console.log('Deactivate', JSON.parse(JSON.stringify(data)));
     }
-
 
     assignFavicon() {
         const favicon = $('#favicon');

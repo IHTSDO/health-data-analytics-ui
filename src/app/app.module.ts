@@ -13,15 +13,13 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 // PIPE IMPORTS
 import { AuthoringService } from './services/authoring/authoring.service';
 import { MatMenuModule } from '@angular/material/menu';
-import { ReferenceTypePipe } from './pipes/reference-type.pipe';
 
 // SERVICE IMPORTS
 
 
 @NgModule({
     declarations: [
-        AppComponent,
-        ReferenceTypePipe
+        AppComponent
     ],
     imports: [
         BrowserModule,

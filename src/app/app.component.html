@@ -9,9 +9,6 @@
         <div class="input-block col m-5 rounded-lg bg-river-bed">
             <div class="row py-3">
                 <h2 class="col mb-0">Patient Criteria</h2>
-                <p>384151000119104</p>
-                <p>566571000119105</p>
-                <p>122548005</p>
             </div>
 
             <div class="colour-cell mb-4">
@@ -110,6 +107,7 @@
                         <input class="rounded-pill p-1 px-3 mb-3 w-100"
                                placeholder="Search for Concept..."
                                [(ngModel)]="comparator.ecl"
+                               (change)="changeComparator(comparator)"
                                [ngbTypeahead]="search">
                     </ng-container>
                 </div>
@@ -155,11 +153,13 @@
                 <button class="button show-insight bg-fruit-salad rounded-lg p-3" (click)="showInsight()">SHOW INSIGHT</button>
             </div>
         </div>
+
         <div class="graph-block col-8 m-5">
             <!--<div class="p-3 m-3 rounded-lg">{{comparison | json}}</div>-->
-            <ngx-charts-bar-vertical-2d
+            <p>840539006 / 882784691000119100 + 419099009 / 414916001 + 73211009 + 38341003</p>
+            <ngx-charts-bar-vertical-2d *ngIf="graphData.length"
                 [scheme]="colorScheme"
-                [results]="fakeData"
+                [results]="graphData"
                 [gradient]="true"
                 [xAxis]="true"
                 [yAxis]="true"

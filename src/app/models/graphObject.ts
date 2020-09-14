@@ -1,6 +1,6 @@
 export class GraphObject {
     name: string;
-    series: DataPoint[];
+    series: Series[];
 
     constructor(name, series) {
         this.name = name;
@@ -8,7 +8,7 @@ export class GraphObject {
     }
 }
 
-export class DataPoint {
+export class Series {
     name: string;
     value: number;
 
