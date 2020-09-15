@@ -22,7 +22,7 @@ export class TerminologyServerService {
 
     getTypeahead(term) {
         return this.http
-            .get(this.authoringService.uiConfiguration.endpoints.terminologyServerEndpoint + this.branchPath +
+            .get('/browser/' + this.branchPath +
                 '/concepts?activeFilter=true&termActive=true&limit=20&term=' + term)
             .pipe(map(responseData => {
                 const typeaheads = [];
@@ -36,7 +36,7 @@ export class TerminologyServerService {
     }
 
     getConcept(id): Observable<object> {
-        return this.http.get<object>(this.authoringService.uiConfiguration.endpoints.terminologyServerEndpoint + this.branchPath
+        return this.http.get<object>('/browser/' + this.branchPath
             + '/concepts/' + id);
     }
 }
