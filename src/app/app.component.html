@@ -1,7 +1,7 @@
 <nav class="navbar p-2">
     <a class="logo">
         <img class="logo mr-2 p-0" src="/assets/small_logo.png">
-        <span class="title text-alto-white pl-3">Outcome Comparison - COVID</span>
+        <span class="title text-alto-white pl-3">Outcome Comparison - COVID 19 </span>
     </a>
 </nav>
 <div class="container-fluid">
@@ -150,37 +150,44 @@
                         (click)="addComorbidity()">ADD COMORBIDITY</button>
             </div>
 
-            <div class="mb-4 text-center">
+            <div class="mb-6 text-center">
                 <button class="button show-insight bg-fruit-salad rounded-lg p-3" (click)="showInsight()">SHOW INSIGHT</button>
+                
             </div>
         </div>
 
-        <div class="graph-block col-8 m-5">
+        <div class="graph-block col-7 m-5">
             <!--<div class="p-3 m-3 rounded-lg">{{comparison | json}}</div>-->
             <p>840539006 / 882784691000119100 + 419099009 / 414916001 + 73211009 + 38341003</p>
-            <div class="mb-4 text-right" *ngIf="graphData.length && !percentage">
-                <button class="button add bg-fruit-salad rounded-pill px-3"
+                <ngx-charts-bar-vertical-2d *ngIf="graphData.length"
+                    [scheme]="colorScheme"
+                    [results]="graphData"
+                    [gradient]="true"
+                    [xAxis]="true"
+                    [yAxis]="true"
+                    [legend]="false"
+                    [showXAxisLabel]="true"
+                    [showYAxisLabel]="true"
+                    [yAxisLabel]="'Patients'"
+                    [legendTitle]="'Key'"
+                    (select)="onSelect($event)"
+                    (activate)="onActivate($event)"
+                    (deactivate)="onDeactivate($event)">
+                </ngx-charts-bar-vertical-2d>
+        </div>
+        <div class="col-1">
+            <br>
+            <div class="text-center m-3 p-3" *ngIf="graphData.length && !percentage">
+                <button class="button add bg-cadet rounded-lg p-3"
                         (click)="togglePercentage()">Percentage</button>
             </div>
-            <div class="mb-4 text-right" *ngIf="graphData.length && percentage">
-                <button class="button add bg-fruit-salad rounded-pill px-3"
+            <div class="text-center m-3 p-3" *ngIf="graphData.length && percentage">
+                <button class="button add bg-cadet rounded-lg p-3"
                         (click)="togglePercentage()">Numeric</button>
             </div>
-            <ngx-charts-bar-vertical-2d *ngIf="graphData.length"
-                [scheme]="colorScheme"
-                [results]="graphData"
-                [gradient]="true"
-                [xAxis]="true"
-                [yAxis]="true"
-                [legend]="false"
-                [showXAxisLabel]="true"
-                [showYAxisLabel]="true"
-                [yAxisLabel]="'Patients'"
-                [legendTitle]="'Key'"
-                (select)="onSelect($event)"
-                (activate)="onActivate($event)"
-                (deactivate)="onDeactivate($event)">
-            </ngx-charts-bar-vertical-2d>
+            <div class="text-center m-3 p-3" *ngIf="graphData.length">
+                <button class="button add bg-haze rounded-lg p-3" (click)="downloadFile()">Download</button>
+            </div>
         </div>
     </div>
 </div>

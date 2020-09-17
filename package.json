@@ -29,6 +29,7 @@
     "ajv": "^6.12.2",
     "bootstrap": "^4.4.1",
     "core-js": "^3.6.5",
+    "file-saver": "^2.0.2",
     "guid-typescript": "^1.0.9",
     "hammerjs": "^2.0.8",
     "jquery": "^3.5.0",

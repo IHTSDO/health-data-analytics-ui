@@ -11,6 +11,7 @@ import { HealthAnalyticsService } from './services/healthAnalytics/health-analyt
 import { CohortCriteria, EncounterCriteria, ReportDefinition, SubReportDefinition } from './models/analyticsRequestObject';
 import { SnomedUtilityService } from './services/snomedUtility/snomed-utility.service';
 import { Series, GraphObject } from './models/graphObject';
+import { saveAs } from 'file-saver';
 
 @Component({
     selector: 'app-root',
@@ -347,6 +348,30 @@ export class AppComponent implements OnInit {
         
 
         this.graphData = graphData;
+    }
+    
+    downloadFile() {
+        var headerArray = [];
+        var lineArray = [];
+        this.graphData.forEach(item => {
+            item.series.forEach(series => {
+                headerArray.push(item.name + " - " + series.name);
+                lineArray.push(series.value);
+            });
+        });
+        let tsv = headerArray.join(",");
+        tsv = tsv + ("\n");
+        tsv = tsv + lineArray.join(",");
+        var blob = new Blob([tsv as BlobPart], {type: 'text/csv' })
+        saveAs(blob, "COVID19.csv");
+        
+//        data.forEach(function (this.graphData, index) {
+//            var line = infoArray.join(",");
+//            lineArray.push(index == 0 ? "data:text/csv;charset=utf-8," + line : line);
+//        });
+//        var csvContent = lineArray.join("\n");
+//        var blob = new Blob(csvContent, {type: 'text/csv' })
+//        saveAs(blob, "myFile.csv");
     }
     
 
