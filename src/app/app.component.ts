@@ -71,7 +71,7 @@ export class AppComponent implements OnInit {
         for (let i = 0; i < this.comparison.comparators.length; i++) {
             this.comparison.comparators[i].color = this.colorScheme.domain[i];
         }
-        
+
         this.percentage = false;
 
         this.changeGender(null);
@@ -88,8 +88,8 @@ export class AppComponent implements OnInit {
 
         this.changeCondition();
     }
-    
-    //Percentage Functions
+
+    // Percentage Functions
     togglePercentage() {
         this.percentage = !this.percentage;
         this.showInsight();
@@ -316,7 +316,7 @@ export class AppComponent implements OnInit {
         console.log('RAW: ', dataSet);
 
         const graphData = [];
-        
+
         if (!percentage) {
             dataSet.groups.forEach(data => {
                 const seriesSet = [];
@@ -329,9 +329,7 @@ export class AppComponent implements OnInit {
             });
 
             console.log('GRAPHDATA: ', graphData);
-        }
-        
-        else {
+        } else {
             dataSet.groups.forEach(data => {
                 const seriesSet = [];
 
@@ -344,36 +342,24 @@ export class AppComponent implements OnInit {
 
             console.log('GRAPHDATA: ', graphData);
         }
-
-        
-
         this.graphData = graphData;
     }
-    
+
     downloadFile() {
-        var headerArray = [];
-        var lineArray = [];
+        const headerArray = [];
+        const lineArray = [];
         this.graphData.forEach(item => {
             item.series.forEach(series => {
-                headerArray.push(item.name + " - " + series.name);
+                headerArray.push(item.name + ' - ' + series.name);
                 lineArray.push(series.value);
             });
         });
-        let tsv = headerArray.join(",");
-        tsv = tsv + ("\n");
-        tsv = tsv + lineArray.join(",");
-        var blob = new Blob([tsv as BlobPart], {type: 'text/csv' })
-        saveAs(blob, "COVID19.csv");
-        
-//        data.forEach(function (this.graphData, index) {
-//            var line = infoArray.join(",");
-//            lineArray.push(index == 0 ? "data:text/csv;charset=utf-8," + line : line);
-//        });
-//        var csvContent = lineArray.join("\n");
-//        var blob = new Blob(csvContent, {type: 'text/csv' })
-//        saveAs(blob, "myFile.csv");
+        let tsv = headerArray.join(',');
+        tsv = tsv + ('\n');
+        tsv = tsv + lineArray.join(',');
+        const blob = new Blob([tsv as BlobPart], {type: 'text/csv' });
+        saveAs(blob, 'COVID19.csv');
     }
-    
 
     // UTILITY FUNCTIONS
     addECLPrefix(ecl) {
