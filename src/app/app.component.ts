@@ -23,13 +23,14 @@ export class AppComponent implements OnInit {
 
     // options
     colorScheme = {
-        domain: ['#5AA454', '#C7B42C', '#AAAAAA']
+        domain: ['#efbb28', '#a9a9a9', '#AAAAAA']
     };
 
     versions: object;
     environment: string;
     year: number = new Date().getFullYear();
     comparison: Comparison;
+    percentage: boolean;
 
     // typeahead
     search = (text$: Observable<string>) => text$.pipe(
@@ -66,6 +67,11 @@ export class AppComponent implements OnInit {
         this.comparison.comparators.push(new Reference(''));
         this.comparison.comparators.push(new Reference(''));
         this.comparison.comorbidityCohort = 0;
+        for (let i = 0; i < this.comparison.comparators.length; i++) {
+            this.comparison.comparators[i].color = this.colorScheme.domain[i];
+        }
+        
+        this.percentage = false;
 
         this.changeGender(null);
     }
@@ -80,6 +86,12 @@ export class AppComponent implements OnInit {
         });
 
         this.changeCondition();
+    }
+    
+    //Percentage Functions
+    togglePercentage() {
+        this.percentage = !this.percentage;
+        this.showInsight();
     }
 
     // CONDITION FUNCTIONS
@@ -295,29 +307,48 @@ export class AppComponent implements OnInit {
 
         this.healthAnalyticsService.getReport(reportDefinition).subscribe(data => {
 
-            this.buildGraph(data);
+            this.buildGraph(data, this.percentage);
         });
     }
 
-    buildGraph(dataSet) {
+    buildGraph(dataSet, percentage) {
         console.log('RAW: ', dataSet);
 
         const graphData = [];
+        
+        if (!percentage) {
+            dataSet.groups.forEach(data => {
+                const seriesSet = [];
 
-        dataSet.groups.forEach(data => {
-            const seriesSet = [];
+                data.groups.forEach(item => {
+                    seriesSet.push(new Series(item.name, item.patientCount));
+                });
 
-            data.groups.forEach(item => {
-                seriesSet.push(new Series(item.name, item.patientCount));
+                graphData.push(new GraphObject( data.name, seriesSet));
             });
 
-            graphData.push(new GraphObject( data.name, seriesSet));
-        });
+            console.log('GRAPHDATA: ', graphData);
+        }
+        
+        else {
+            dataSet.groups.forEach(data => {
+                const seriesSet = [];
 
-        console.log('GRAPHDATA: ', graphData);
+                data.groups.forEach(item => {
+                    seriesSet.push(new Series(item.name, (item.patientCount / data.patientCount) * 100));
+                });
+
+                graphData.push(new GraphObject( data.name, seriesSet));
+            });
+
+            console.log('GRAPHDATA: ', graphData);
+        }
+
+        
 
         this.graphData = graphData;
     }
+    
 
     // UTILITY FUNCTIONS
     addECLPrefix(ecl) {

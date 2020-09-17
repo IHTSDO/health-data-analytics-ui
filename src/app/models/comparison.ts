@@ -20,6 +20,7 @@ export class Reference {
     ecl: string;
     name: string;
     type: string;
+    color: string;
 
     constructor(ecl, type?) {
         this.ecl = ecl;
