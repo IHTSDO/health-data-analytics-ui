@@ -128,7 +128,7 @@ export class AppComponent implements OnInit {
         }
     }
     removeComparator(index) {
-        this.comparison.comparators.splice(index, 1)
+        this.comparison.comparators.splice(index, 1);
         for (let i = 0; i < this.comparison.comparators.length; i++) {
             this.comparison.comparators[i].color = this.colorScheme.domain[i];
         }
