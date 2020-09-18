@@ -74,10 +74,19 @@ $mandy: #EB4C59;
     background-color: $mandy;
 }
 
+$remove: #d86767;
+.text-remove {
+    color: $remove;
+}
+.bg-remove {
+    background-color: $remove;
+}
+    
+
 ////////////////////////////////////////////////////////////////////////
 // GREEN ///////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-$fruit-salad: #4EA24E;
+$fruit-salad: #808080;
 .text-fruit-salad {
     color: $fruit-salad;
 }
@@ -112,7 +121,7 @@ $blumine: #124F6B;
     background-color: $blumine;
 }
 
-$cadet: #85bfd0;
+$cadet: #b3b5c3;
 .text-cadet {
     color: $cadet;
 }

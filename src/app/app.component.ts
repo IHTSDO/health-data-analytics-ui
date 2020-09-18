@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
 
     // options
     colorScheme = {
-        domain: ['#459264', '#e2ab66', '#AAAAAA']
+        domain: ['#8bcadc', '#fdd098', '#8bcadc', '#fdd098', '#8bcadc', '#fdd098']
     };
 
     versions: object;
@@ -123,6 +123,15 @@ export class AppComponent implements OnInit {
     // COMPARATOR FUNCTIONS
     addComparator() {
         this.comparison.comparators.push(new Reference(''));
+        for (let i = 0; i < this.comparison.comparators.length; i++) {
+            this.comparison.comparators[i].color = this.colorScheme.domain[i];
+        }
+    }
+    removeComparator(index) {
+        this.comparison.comparators.splice(index, 1)
+        for (let i = 0; i < this.comparison.comparators.length; i++) {
+            this.comparison.comparators[i].color = this.colorScheme.domain[i];
+        }
     }
 
     assignComparatorName(comparator) {
