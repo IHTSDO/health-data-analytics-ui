@@ -52,9 +52,26 @@ div.input-block {
         font-weight: 300;
     }
 
-    i:hover {
+    i {
         cursor: pointer;
-        color: $white;
+        position: relative;
+
+        &.top-icon {
+            &:hover {
+                color: $white;
+            }
+        }
+
+        &.close-icon {
+            position: absolute;
+            top: 0;
+            right: 0;
+            color: $river-bed;
+
+            &:hover {
+                color: $black;
+            }
+        }
     }
 
     div.colour-cell {
@@ -85,8 +102,12 @@ div.input-block {
 
         span.count {
             position: absolute;
-            top: 1rem;
-            right: 0;
+            top: 0.5rem;
+            right: 1rem;
+
+            &.close-offset {
+                right: 3rem;
+            }
         }
     }
 

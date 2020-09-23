@@ -10,15 +10,15 @@
             <div class="row py-3">
                 <h2 class="col mb-0">Patient Criteria</h2>
                 <div class="float-right mr-4">
-                    <i class="material-icons medium m-2">link</i>
-                    <i class="material-icons medium m-2" (click)="downloadFile()">get_app</i>
-                    <i class="material-icons medium m-2">save</i>
+                    <i class="material-icons medium m-2 top-icon">link</i>
+                    <i class="material-icons medium m-2 top-icon" (click)="downloadFile()">get_app</i>
+                    <i class="material-icons medium m-2 top-icon">save</i>
                 </div>
             </div>
 
             <div class="colour-cell mb-4">
                 <h3 class="col p-3 mb-0 bg-cadet rounded-top">Gender</h3>
-                <span class="col count text-right">{{comparison?.cohort ? (comparison.cohort | number:'1.0-0') : '0'}} patients</span>
+                <span class="count">{{comparison?.cohort ? (comparison.cohort | number:'1.0-0') : '0'}} patients</span>
                 <div class="input-group radios bg-cadet-lighter rounded-bottom p-3">
                     <input type="radio" id="gender-all" name="gender" class="p-2"
                            [checked]="comparison.gender === null"
@@ -37,7 +37,7 @@
 
             <div class="colour-cell mb-4">
                 <h3 class="col p-3 mb-0 bg-cadet rounded-top">Condition</h3>
-                <span class="col count text-right">{{comparison?.conditionCohort ? (comparison.conditionCohort | number:'1.0-0') : '0'}} patients</span>
+                <span class="count">{{comparison?.conditionCohort ? (comparison.conditionCohort | number:'1.0-0') : '0'}} patients</span>
                 <ng-container *ngIf="exists('finding')">
                     <h3 class="col px-3 mb-0 bg-cadet-lighter">Finding</h3>
                     <div class="input-group bg-cadet-lighter px-3">
@@ -137,16 +137,19 @@
             </div>
 
             <div class="colour-cell mb-4">
-                <h3 class="col p-3 mb-0 lighter bg-haze rounded-top">No Refinements</h3>
-                <span class="col count text-right">{{comparison.comorbidityCohort ? (comparison.comorbidityCohort | number:'1.0-0') : '0'}} patients</span>
-                <h3 class="col p-3 mb-0 bg-haze-lighter rounded-bottom">Control Group</h3>
+                <h3 class="col p-3 mb-0 bg-haze rounded-top">No Refinements</h3>
+                <span class="count">{{comparison.comorbidityCohort ? (comparison.comorbidityCohort | number:'1.0-0') : '0'}} patients</span>
+                <h3 class="col p-3 mb-0 lighter bg-haze-lighter rounded-bottom">Control Group</h3>
             </div>
 
-            <ng-container *ngFor="let comorbidity of comparison.comorbidities">
+            <ng-container *ngFor="let comorbidity of comparison.comorbidities; let i = index">
                 <div class="colour-cell mb-4">
-                    <h3 class="col p-3 mb-0 lighter bg-haze rounded-top">Finding: {{comorbidity.name ? comorbidity.name : '-'}}</h3>
-                    <span class="col count text-right">{{comorbidity?.patientCount ? (comorbidity.patientCount | number:'1.0-0') : '0'}} patients</span>
-                    <div class="input-group bg-haze-lighter px-3">
+                    <h3 class="col p-3 mb-0 bg-haze rounded-top">Finding: {{comorbidity.name ? comorbidity.name : '-'}}</h3>
+                    <span class="count close-offset">
+                        {{comorbidity?.patientCount ? (comorbidity.patientCount | number:'1.0-0') : '0'}} patients
+                    </span>
+                    <i class="material-icons close-icon p-1" (click)="removeComorbidity(i)">close</i>
+                    <div class="input-group bg-haze-lighter px-3 pt-3">
                         <ng-container *ngFor="let refinement of comorbidity.refinements; let i = index">
                             <input class="rounded-pill p-1 px-3 mb-3 w-100 col-11"
                                    placeholder="Search for Concept..."

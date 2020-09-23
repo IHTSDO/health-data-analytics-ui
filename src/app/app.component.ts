@@ -65,6 +65,7 @@ export class AppComponent implements OnInit {
 
     setupComparisonObject() {
         this.comparison = new Comparison(null, [], [], []);
+        this.comparison.condition.push(new Reference('', 'finding'));
         this.comparison.comparators.push(new Reference(''));
         this.comparison.comparators.push(new Reference(''));
         this.comparison.comorbidityCohort = 0;
@@ -147,6 +148,10 @@ export class AppComponent implements OnInit {
     // COMORBIDITY FUNCTIONS
     addComorbidity() {
         this.comparison.comorbidities.push(new Comorbidity([new Reference('')]));
+    }
+
+    removeComorbidity(index) {
+        this.comparison.comorbidities.splice(index, 1);
     }
 
     addComorbidityReference(comorbidity) {
