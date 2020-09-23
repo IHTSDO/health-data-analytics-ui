@@ -9,7 +9,11 @@
         <div class="input-block col m-5 rounded-lg bg-river-bed">
             <div class="row py-3">
                 <h2 class="col mb-0">Patient Criteria</h2>
-                <i class="material-icons medium text-right mr-4">save</i>
+                <div class="float-right mr-4">
+                    <i class="material-icons medium m-2">link</i>
+                    <i class="material-icons medium m-2" (click)="downloadFile()">get_app</i>
+                    <i class="material-icons medium m-2">save</i>
+                </div>
             </div>
 
             <div class="colour-cell mb-4">
@@ -43,7 +47,7 @@
                                    [(ngModel)]="condition.ecl"
                                    (change)="changeCondition()"
                                    [ngbTypeahead]="search">
-                            <i class="material-icons medium text-remove text-center col-1" (click)="comparison.condition.splice(i, 1)">remove</i>
+                            <i *ngIf="condition.type === 'finding'" class="material-icons medium text-remove text-center col-1" (click)="comparison.condition.splice(i, 1)">remove</i>
                         </ng-container>
                     </div>
                 </ng-container>
@@ -56,7 +60,7 @@
                                    [(ngModel)]="condition.ecl"
                                    (change)="changeCondition()"
                                    [ngbTypeahead]="search">
-                            <i class="material-icons medium text-remove text-center col-1" (click)="comparison.condition.splice(i, 1)">remove</i>
+                            <i *ngIf="condition.type === 'disorder'" class="material-icons medium text-remove text-center col-1" (click)="comparison.condition.splice(i, 1)">remove</i>
                         </ng-container>
                     </div>
                 </ng-container>
@@ -69,7 +73,7 @@
                                    [(ngModel)]="condition.ecl"
                                    (change)="changeCondition()"
                                    [ngbTypeahead]="search">
-                            <i class="material-icons medium text-remove text-center col-1" (click)="comparison.condition.splice(i, 1)">remove</i>
+                            <i *ngIf="condition.type === 'medication'" class="material-icons medium text-remove text-center col-1" (click)="comparison.condition.splice(i, 1)">remove</i>
                         </ng-container>
                     </div>
                 </ng-container>
@@ -82,7 +86,7 @@
                                    [(ngModel)]="condition.ecl"
                                    (change)="changeCondition()"
                                    [ngbTypeahead]="search">
-                            <i class="material-icons medium text-remove text-center col-1" (click)="comparison.condition.splice(i, 1)">remove</i>
+                            <i *ngIf="condition.type === 'procedure'" class="material-icons medium text-remove text-center col-1" (click)="comparison.condition.splice(i, 1)">remove</i>
                         </ng-container>
                     </div>
                 </ng-container>
@@ -105,6 +109,10 @@
                 </div>
             </div>
 
+            <div class="row py-3">
+                <h2 class="col mb-0">Outcomes</h2>
+            </div>
+
             <div class="colour-cell mb-4">
                 <h3 class="col p-3 mb-0 bg-cadet rounded-top">Compare Outcome</h3>
                 <div class="input-group bg-cadet-lighter px-3 pt-3">
@@ -124,6 +132,10 @@
                 </div>
             </div>
 
+            <div class="row py-3">
+                <h2 class="col mb-0">Groups</h2>
+            </div>
+
             <div class="colour-cell mb-4">
                 <h3 class="col p-3 mb-0 lighter bg-haze rounded-top">No Refinements</h3>
                 <span class="col count text-right">{{comparison.comorbidityCohort ? (comparison.comorbidityCohort | number:'1.0-0') : '0'}} patients</span>
@@ -132,9 +144,8 @@
 
             <ng-container *ngFor="let comorbidity of comparison.comorbidities">
                 <div class="colour-cell mb-4">
-                    <h3 class="col p-3 mb-0 lighter bg-haze rounded-top">Comorbidity: {{comorbidity.name ? comorbidity.name : '-'}}</h3>
+                    <h3 class="col p-3 mb-0 lighter bg-haze rounded-top">Finding: {{comorbidity.name ? comorbidity.name : '-'}}</h3>
                     <span class="col count text-right">{{comorbidity?.patientCount ? (comorbidity.patientCount | number:'1.0-0') : '0'}} patients</span>
-                    <h3 class="col p-3 mb-0 bg-haze-lighter">Finding</h3>
                     <div class="input-group bg-haze-lighter px-3">
                         <ng-container *ngFor="let refinement of comorbidity.refinements; let i = index">
                             <input class="rounded-pill p-1 px-3 mb-3 w-100 col-11"
@@ -152,60 +163,54 @@
                 </div>
             </ng-container>
 
-            <div class="mb-4 text-right">
-                <button class="button add bg-fruit-salad rounded-pill px-3"
-                        mat-button [matMenuTriggerFor]="refMenu">ADD REFINEMENT</button>
+            <div class="mb-4">
+                <button class="button float-left add bg-fruit-salad rounded-pill px-3" (click)="resetTool()">RESET</button>
+                <button class="button float-right add bg-fruit-salad rounded-pill px-3" mat-button [matMenuTriggerFor]="refMenu">ADD REFINEMENT</button>
                 <mat-menu #refMenu="matMenu">
-                        <button mat-menu-item (click)="addComorbidity()">
-                            <span>Comorbidity</span>
-                        </button>
-                        <button mat-menu-item>
-                            <span>Product</span>
-                        </button>
-                        <button mat-menu-item>
-                            <span>Procedure</span>
-                        </button>
-                    </mat-menu>
+                    <button mat-menu-item (click)="addComorbidity()">
+                        <span>Finding</span>
+                    </button>
+                    <button mat-menu-item>
+                        <span>Product</span>
+                    </button>
+                    <button mat-menu-item>
+                        <span>Procedure</span>
+                    </button>
+                </mat-menu>
             </div>
-            
 
-            <div class="mb-6 text-center">
-                <button class="button show-insight bg-fruit-salad rounded-lg p-3 ml-5 mb-5" (click)="showInsight()">SHOW INSIGHT</button>
+            <div class="mt-5 pt-5 text-center">
+                <button class="button show-insight bg-fruit-salad rounded-lg p-3 mb-4" (click)="showInsight()">SHOW INSIGHT</button>
             </div>
         </div>
 
         <div class="graph-block col-7 m-5">
-            <!--<div class="p-3 m-3 rounded-lg">{{comparison | json}}</div>-->
-<!--            <p>840539006 / 882784691000119100 + 419099009 / 414916001 + 73211009 + 38341003</p>-->
+            <div class="p-3 m-3 rounded-lg">{{comparison | json}}</div>
+            <p>840539006 / 882784691000119100 + 419099009 / 414916001 + 73211009 + 38341003</p>
             <div class="text-right m-3 p-3" *ngIf="graphData.length && !percentage">
-                <button class="button add bg-fruit-salad rounded-pill px-3"
-                        (click)="togglePercentage()" style="color: #E0E0E0;">PERCENTAGE</button>
+                <button class="button add bg-fruit-salad rounded-pill px-3" (click)="togglePercentage()" style="color: #E0E0E0;">PERCENTAGE</button>
             </div>
             <div class="text-right m-3 p-3" *ngIf="graphData.length && percentage">
-                <button class="button add bg-fruit-salad rounded-pill px-3"
-                        (click)="togglePercentage()" style="color: #E0E0E0;">NUMERIC</button>
+                <button class="button add bg-fruit-salad rounded-pill px-3" (click)="togglePercentage()" style="color: #E0E0E0;">NUMERIC</button>
             </div>
-                <ngx-charts-bar-vertical-2d *ngIf="graphData.length"
-                    [scheme]="colorScheme"
-                    [results]="graphData"
-                    [gradient]="true"
-                    [xAxis]="true"
-                    [yAxis]="true"
-                    [legend]="false"
-                    [showXAxisLabel]="true"
-                    [showYAxisLabel]="true"
-                    [yAxisLabel]="'Patients'"
-                    [legendTitle]="'Key'"
-                    (select)="onSelect($event)"
-                    (activate)="onActivate($event)"
-                    (deactivate)="onDeactivate($event)">
-                </ngx-charts-bar-vertical-2d>
-            <div class="text-right m-3 p-3" *ngIf="graphData.length">
-                <button class="button add bg-fruit-salad rounded-pill px-3" 
-                        style="color: #E0E0E0;" (click)="downloadFile()">DOWNLOAD</button>
-            </div>
+            <ngx-charts-bar-vertical-2d *ngIf="graphData.length"
+                [scheme]="colorScheme"
+                [results]="graphData"
+                [gradient]="true"
+                [xAxis]="true"
+                [yAxis]="true"
+                [legend]="false"
+                [showXAxisLabel]="true"
+                [showYAxisLabel]="true"
+                [yAxisLabel]="percentage ? 'Percent of Patients' : 'Patients'"
+                [legendTitle]="'Key'"
+                (select)="onSelect($event)"
+                (activate)="onActivate($event)"
+                (deactivate)="onDeactivate($event)">
+            </ngx-charts-bar-vertical-2d>
+
         </div>
-        
+
     </div>
 </div>
 <footer class="footer">

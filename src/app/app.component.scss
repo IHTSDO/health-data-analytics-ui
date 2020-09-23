@@ -8,11 +8,11 @@ h3, div {
     &.bg-candlelight-lighter {
         background-color: lighten($candlelight, 10%);
     }
-    
+
     &.bg-cadet-lighter {
         background-color: lighten($cadet, 10%);
     }
-    
+
     &.bg-haze-lighter {
         background-color: lighten($haze, 20%);
     }
@@ -50,6 +50,11 @@ div.input-block {
 
     h2 {
         font-weight: 300;
+    }
+
+    i:hover {
+        cursor: pointer;
+        color: $white;
     }
 
     div.colour-cell {

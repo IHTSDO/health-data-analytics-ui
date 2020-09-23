@@ -354,6 +354,21 @@ export class AppComponent implements OnInit {
         this.graphData = graphData;
     }
 
+
+
+    // UTILITY FUNCTIONS
+    addECLPrefix(ecl) {
+        if (ecl && ecl.substring(0, 2) !== '<<') {
+            return '<<' + ecl;
+        } else {
+            return ecl;
+        }
+    }
+
+    resetTool() {
+        this.setupComparisonObject();
+    }
+
     downloadFile() {
         const headerArray = [];
         const lineArray = [];
@@ -368,15 +383,6 @@ export class AppComponent implements OnInit {
         tsv = tsv + lineArray.join(',');
         const blob = new Blob([tsv as BlobPart], {type: 'text/csv' });
         saveAs(blob, 'COVID19.csv');
-    }
-
-    // UTILITY FUNCTIONS
-    addECLPrefix(ecl) {
-        if (ecl && ecl.substring(0, 2) !== '<<') {
-            return '<<' + ecl;
-        } else {
-            return ecl;
-        }
     }
 
     onSelect(data): void {
