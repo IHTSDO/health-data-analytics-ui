@@ -42,12 +42,14 @@
                     <h3 class="col px-3 mb-0 bg-cadet-lighter">Finding</h3>
                     <div class="input-group bg-cadet-lighter px-3">
                         <ng-container *ngFor="let condition of comparison.condition; let i = index">
-                            <input *ngIf="condition.type === 'finding'" class="rounded-pill p-1 px-3 mb-3 w-100 col-11"
-                                   placeholder="Search for Concept..."
-                                   [(ngModel)]="condition.ecl"
-                                   (change)="changeCondition()"
-                                   [ngbTypeahead]="search">
-                            <i *ngIf="condition.type === 'finding'" class="material-icons medium text-remove text-center col-1" (click)="comparison.condition.splice(i, 1)">remove</i>
+                            <div *ngIf="condition.type === 'finding'" class="position-relative w-100">
+                                <input class="rounded-pill p-1 px-3 mb-3 w-100"
+                                       placeholder="Search for Concept..."
+                                       [(ngModel)]="condition.ecl"
+                                       (change)="changeCondition()"
+                                       [ngbTypeahead]="search">
+                                <i class="material-icons text-remove text-center" (click)="comparison.condition.splice(i, 1)">close</i>
+                            </div>
                         </ng-container>
                     </div>
                 </ng-container>
@@ -55,12 +57,14 @@
                     <h3 class="col px-3 mb-0 bg-cadet-lighter">Disorder</h3>
                     <div class="input-group bg-cadet-lighter px-3">
                         <ng-container *ngFor="let condition of comparison.condition; let i = index">
-                            <input *ngIf="condition.type === 'disorder'" class="rounded-pill p-1 px-3 mb-3 w-100 col-11"
-                                   placeholder="Search for Concept..."
-                                   [(ngModel)]="condition.ecl"
-                                   (change)="changeCondition()"
-                                   [ngbTypeahead]="search">
-                            <i *ngIf="condition.type === 'disorder'" class="material-icons medium text-remove text-center col-1" (click)="comparison.condition.splice(i, 1)">remove</i>
+                            <div *ngIf="condition.type === 'disorder'" class="position-relative w-100">
+                                <input class="rounded-pill p-1 px-3 mb-3 w-100"
+                                       placeholder="Search for Concept..."
+                                       [(ngModel)]="condition.ecl"
+                                       (change)="changeCondition()"
+                                       [ngbTypeahead]="search">
+                                <i class="material-icons text-remove text-center" (click)="comparison.condition.splice(i, 1)">close</i>
+                            </div>
                         </ng-container>
                     </div>
                 </ng-container>
@@ -68,12 +72,14 @@
                     <h3 class="col px-3 mb-0 bg-cadet-lighter">Medication</h3>
                     <div class="input-group bg-cadet-lighter px-3">
                         <ng-container *ngFor="let condition of comparison.condition; let i = index">
-                            <input *ngIf="condition.type === 'medication'" class="rounded-pill p-1 px-3 mb-3 w-100 col-11"
-                                   placeholder="Search for Concept..."
-                                   [(ngModel)]="condition.ecl"
-                                   (change)="changeCondition()"
-                                   [ngbTypeahead]="search">
-                            <i *ngIf="condition.type === 'medication'" class="material-icons medium text-remove text-center col-1" (click)="comparison.condition.splice(i, 1)">remove</i>
+                            <div *ngIf="condition.type === 'medication'" class="position-relative w-100">
+                                <input class="rounded-pill p-1 px-3 mb-3 w-100"
+                                       placeholder="Search for Concept..."
+                                       [(ngModel)]="condition.ecl"
+                                       (change)="changeCondition()"
+                                       [ngbTypeahead]="search">
+                                <i class="material-icons text-remove text-center" (click)="comparison.condition.splice(i, 1)">close</i>
+                            </div>
                         </ng-container>
                     </div>
                 </ng-container>
@@ -81,12 +87,14 @@
                     <h3 class="col px-3 mb-0 bg-cadet-lighter">Procedure</h3>
                     <div class="input-group bg-cadet-lighter px-3">
                         <ng-container *ngFor="let condition of comparison.condition; let i = index">
-                            <input *ngIf="condition.type === 'procedure'" class="rounded-pill p-1 px-3 mb-3 w-100 col-11"
-                                   placeholder="Search for Concept..."
-                                   [(ngModel)]="condition.ecl"
-                                   (change)="changeCondition()"
-                                   [ngbTypeahead]="search">
-                            <i *ngIf="condition.type === 'procedure'" class="material-icons medium text-remove text-center col-1" (click)="comparison.condition.splice(i, 1)">remove</i>
+                            <div *ngIf="condition.type === 'procedure'" class="position-relative w-100">
+                                <input class="rounded-pill p-1 px-3 mb-3 w-100"
+                                       placeholder="Search for Concept..."
+                                       [(ngModel)]="condition.ecl"
+                                       (change)="changeCondition()"
+                                       [ngbTypeahead]="search">
+                                <i class="material-icons text-remove text-center" (click)="comparison.condition.splice(i, 1)">close</i>
+                            </div>
                         </ng-container>
                     </div>
                 </ng-container>
@@ -117,13 +125,15 @@
                 <h3 class="col p-3 mb-0 bg-cadet rounded-top">Compare Outcome</h3>
                 <div class="input-group bg-cadet-lighter px-3 pt-3">
                     <ng-container *ngFor="let comparator of comparison.comparators; let i = index">
-                        <input [ngStyle]="{'background-color': comparator.color}"
-                               class="rounded-pill p-1 px-3 mb-3 w-100 col-11"
-                               placeholder="Search for Concept..."
-                               [(ngModel)]="comparator.ecl"
-                               (change)="changeComparator(comparator)"
-                               [ngbTypeahead]="search">
-                        <i class="material-icons medium text-remove text-center col-1" (click)="removeComparator(i)">remove</i>
+                        <div class="position-relative w-100">
+                            <input [ngStyle]="{'background-color': comparator.color}"
+                                   class="rounded-pill p-1 px-3 mb-3 w-100"
+                                   placeholder="Search for Concept..."
+                                   [(ngModel)]="comparator.ecl"
+                                   (change)="changeComparator(comparator)"
+                                   [ngbTypeahead]="search">
+                            <i class="material-icons text-remove text-center" (click)="comparison.comparators.splice(i, 1)">close</i>
+                        </div>
                     </ng-container>
                 </div>
                 <div class="bg-cadet-lighter rounded-bottom text-right px-3 pb-3">
@@ -148,15 +158,17 @@
                     <span class="count close-offset">
                         {{comorbidity?.patientCount ? (comorbidity.patientCount | number:'1.0-0') : '0'}} patients
                     </span>
-                    <i class="material-icons close-icon p-1" (click)="removeComorbidity(i)">close</i>
+                    <i class="material-icons close-icon p-1" (click)="comparison.comorbidities.splice(i, 1)">close</i>
                     <div class="input-group bg-haze-lighter px-3 pt-3">
                         <ng-container *ngFor="let refinement of comorbidity.refinements; let i = index">
-                            <input class="rounded-pill p-1 px-3 mb-3 w-100 col-11"
-                                   placeholder="Search for Concept..."
-                                   [(ngModel)]="refinement.ecl"
-                                   (change)="changeComorbidity(comorbidity)"
-                                   [ngbTypeahead]="search">
-                            <i class="material-icons medium text-remove text-center col-1" (click)="comorbidity.refinements.splice(i, 1)">remove</i>
+                            <div class="position-relative w-100">
+                                <input class="rounded-pill p-1 px-3 mb-3 w-100"
+                                       placeholder="Search for Concept..."
+                                       [(ngModel)]="refinement.ecl"
+                                       (change)="changeComorbidity(comorbidity)"
+                                       [ngbTypeahead]="search">
+                                <i class="material-icons text-remove text-center" (click)="comorbidity.refinements.splice(i, 1)">close</i>
+                            </div>
                         </ng-container>
                     </div>
                     <div class="bg-haze-lighter rounded-bottom text-right px-3 pb-3">

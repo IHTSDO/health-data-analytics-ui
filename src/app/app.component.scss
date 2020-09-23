@@ -97,6 +97,18 @@ div.input-block {
                 label {
                     font-size: 1.4rem;
                 }
+
+                i.text-remove {
+                    position: absolute;
+                    top: 0.45rem;
+                    right: 0.4rem;
+                    font-size: 1.8rem;
+                    color: $grey;
+
+                    &:hover {
+                        color: $river-bed;
+                    }
+                }
             }
         }
 
