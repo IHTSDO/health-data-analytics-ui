@@ -100,7 +100,7 @@
                     </div>
                 </ng-container>
                 <div class="bg-cadet-lighter rounded-bottom text-right p-3">
-                    <button class="button add bg-fruit-salad rounded-pill px-3" mat-button [matMenuTriggerFor]="menu">ADD</button>
+                    <button class="button add bg-grey rounded-pill px-3" mat-button [matMenuTriggerFor]="menu">ADD</button>
                     <mat-menu #menu="matMenu">
                         <button mat-menu-item (click)="addCondition('finding')">
                             <span>Finding</span>
@@ -138,7 +138,7 @@
                     </ng-container>
                 </div>
                 <div class="bg-cadet-lighter rounded-bottom text-right p-3">
-                    <button class="button add bg-fruit-salad rounded-pill px-3"
+                    <button class="button add bg-grey rounded-pill px-3"
                             (click)="addComparator()">ADD</button>
                 </div>
             </div>
@@ -174,15 +174,15 @@
                         </ng-container>
                     </div>
                     <div class="bg-haze-lighter rounded-bottom text-right px-3 pb-3">
-                        <button class="button add bg-fruit-salad rounded-pill px-3"
+                        <button class="button add bg-grey rounded-pill px-3"
                                 (click)="addComorbidityReference(comorbidity)">ADD</button>
                     </div>
                 </div>
             </ng-container>
 
             <div class="mb-4">
-                <button class="button float-left add bg-fruit-salad rounded-pill px-3" (click)="resetTool()">RESET</button>
-                <button class="button float-right add bg-fruit-salad rounded-pill px-3" mat-button [matMenuTriggerFor]="refMenu">ADD REFINEMENT</button>
+                <button class="button float-left add bg-grey rounded-pill px-3" (click)="resetTool()">RESET</button>
+                <button class="button float-right add bg-grey rounded-pill px-3" mat-button [matMenuTriggerFor]="refMenu">ADD REFINEMENT</button>
                 <mat-menu #refMenu="matMenu">
                     <button mat-menu-item (click)="addComorbidity()">
                         <span>Finding</span>
@@ -197,18 +197,15 @@
             </div>
 
             <div class="mt-5 pt-5 text-center">
-                <button class="button show-insight bg-fruit-salad rounded-lg p-3 mb-4" (click)="showInsight()">SHOW INSIGHT</button>
+                <button class="button show-insight bg-grey rounded-lg p-3 mb-4" (click)="showInsight()">SHOW INSIGHT</button>
             </div>
         </div>
 
         <div class="graph-block col-7 m-5">
             <!--<div class="p-3 m-3 rounded-lg">{{comparison | json}}</div>-->
-            <div class="text-right m-3 p-3" *ngIf="graphData.length && !percentage">
-                <button class="button add bg-fruit-salad rounded-pill px-3" (click)="togglePercentage()" style="color: #E0E0E0;">PERCENTAGE</button>
-            </div>
-            <div class="text-right m-3 p-3" *ngIf="graphData.length && percentage">
-                <button class="button add bg-fruit-salad rounded-pill px-3" (click)="togglePercentage()" style="color: #E0E0E0;">NUMERIC</button>
-            </div>
+            <button *ngIf="graphData.length" class="button percentage bg-grey rounded-pill px-3 py-2 text-alto-white"
+                    (click)="togglePercentage()">{{percentage ? 'PERCENTAGE' : 'NUMERIC'}}</button>
+
             <ngx-charts-bar-vertical-2d *ngIf="graphData.length"
                 [scheme]="colorScheme"
                 [results]="graphData"

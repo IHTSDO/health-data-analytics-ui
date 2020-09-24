@@ -1,14 +1,6 @@
 @import '~src/variables.scss';
 
 h3, div {
-    &.bg-sea-buckthorn-lighter {
-        background-color: lighten($sea-buckthorn, 10%);
-    }
-
-    &.bg-candlelight-lighter {
-        background-color: lighten($candlelight, 10%);
-    }
-
     &.bg-cadet-lighter {
         background-color: lighten($cadet, 10%);
     }
@@ -139,7 +131,7 @@ div.input-block {
             color: $alto-white;
 
             &:hover {
-                background-color: darken($fruit-salad, 10%);
+                background-color: darken($grey, 10%);
             }
         }
     }
@@ -147,6 +139,18 @@ div.input-block {
 
 div.graph-block {
     height: calc(100vh - 20rem);
+    position: relative;
+
+    button.percentage {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 12rem;
+
+        &:hover {
+            background-color: darken($grey, 10%);
+        }
+    }
 }
 
 footer.footer {

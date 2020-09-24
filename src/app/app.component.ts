@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
 
     // options
     colorScheme = {
-        domain: ['#8bcadc', '#fdd098', '#8bcadc', '#fdd098', '#8bcadc', '#fdd098']
+        domain: ['#8bcadc', '#fdd098', '#dc8bca', '#8ce58a', '#8bcadc', '#fdd098', '#dc8bca', '#8ce58a']
     };
 
     versions: object;
