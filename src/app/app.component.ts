@@ -32,6 +32,7 @@ export class AppComponent implements OnInit {
     year: number = new Date().getFullYear();
     comparison: Comparison;
     percentage: boolean;
+    yScaleMax = 100;
 
     // typeahead
     search = (text$: Observable<string>) => text$.pipe(
@@ -73,7 +74,7 @@ export class AppComponent implements OnInit {
             this.comparison.comparators[i].color = this.colorScheme.domain[i];
         }
 
-        this.percentage = false;
+        this.percentage = true;
 
         this.changeGender(null);
     }
@@ -92,8 +93,7 @@ export class AppComponent implements OnInit {
 
     // Percentage Functions
     togglePercentage() {
-        this.percentage = !this.percentage;
-        this.showInsight();
+        this.showInsight(true);
     }
 
     // CONDITION FUNCTIONS
@@ -264,7 +264,7 @@ export class AppComponent implements OnInit {
     }
 
     // GRAPH FUNCTIONS
-    showInsight() {
+    showInsight(toggle) {
         // Create new Report for submission to API
         const reportDefinition = new ReportDefinition(null, [], 'COVID-19 Comorbidity Affects');
 
@@ -321,7 +321,9 @@ export class AppComponent implements OnInit {
         reportDefinition.groups.push(comparatorArray);
 
         this.healthAnalyticsService.getReport(reportDefinition).subscribe(data => {
-
+            if(toggle){
+                this.percentage = !this.percentage;
+            }
             this.buildGraph(data, this.percentage);
         });
     }
@@ -348,7 +350,7 @@ export class AppComponent implements OnInit {
                 const seriesSet = [];
 
                 data.groups.forEach(item => {
-                    seriesSet.push(new Series(item.name, (item.patientCount / data.patientCount) * 100));
+                    seriesSet.push(new Series(item.name, ((item.patientCount / data.patientCount) * 100).toFixed(1)));
                 });
 
                 graphData.push(new GraphObject( data.name, seriesSet));

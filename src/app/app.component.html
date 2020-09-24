@@ -217,7 +217,9 @@
                 [showXAxisLabel]="true"
                 [showYAxisLabel]="true"
                 [yAxisLabel]="percentage ? 'Percent of Patients' : 'Patients'"
+                [yScaleMax]="yScaleMax"
                 [legendTitle]="'Key'"
+                [groupPadding]="35"
                 (select)="onSelect($event)"
                 (activate)="onActivate($event)"
                 (deactivate)="onDeactivate($event)">
