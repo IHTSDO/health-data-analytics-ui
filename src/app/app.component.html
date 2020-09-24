@@ -150,7 +150,7 @@
 
             <div class="colour-cell mb-4">
                 <h3 class="col p-3 mb-0 bg-haze rounded-top">No Refinements</h3>
-                <span class="count">{{comparison.comorbidityCohort ? (comparison.comorbidityCohort | number:'1.0-0') : '0'}} patients</span>
+                <span class="count">{{comparison.comorbidityCohort ? (comparison.comorbidityCohort | number:'1.0-0') : (comparison.conditionCohort | number:'1.0-0')}} patients</span>
                 <h3 class="col p-3 mb-0 lighter bg-haze-lighter rounded-bottom">Control Group</h3>
             </div>
 
@@ -160,7 +160,7 @@
                     <span class="count close-offset">
                         {{comorbidity?.patientCount ? (comorbidity.patientCount | number:'1.0-0') : '0'}} patients
                     </span>
-                    <i class="material-icons group-delete p-1" (click)="comparison.comorbidities.splice(i, 1)">close</i>
+                    <i class="material-icons group-delete p-1" (click)="comparison.comorbidities.splice(i, 1); changeComorbidity(comorbidity)">close</i>
                     <div class="input-group bg-haze-lighter px-3 pt-3">
                         <ng-container *ngFor="let refinement of comorbidity.refinements; let i = index">
                             <div class="position-relative w-100">
@@ -225,12 +225,12 @@
                 (select)="onSelect($event)"
                 (activate)="onActivate($event)"
                 (deactivate)="onDeactivate($event)">
-                
+
                 <ng-template #tooltipTemplate let-model="model">
                     <p>{{model.name}}</p>
                     <p>{{model.value}}<span *ngIf="percentage">%</span></p>
                 </ng-template>
-                
+
             </ngx-charts-bar-vertical-2d>
         </div>
 

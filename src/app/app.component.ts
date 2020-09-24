@@ -69,7 +69,7 @@ export class AppComponent implements OnInit {
         this.comparison.condition.push(new Reference('', 'finding'));
         this.comparison.comparators.push(new Reference(''));
         this.comparison.comparators.push(new Reference(''));
-        this.comparison.comorbidityCohort = 0;
+        this.comparison.comorbidityCohort = null;
         for (let i = 0; i < this.comparison.comparators.length; i++) {
             this.comparison.comparators[i].color = this.colorScheme.domain[i];
         }
@@ -85,7 +85,6 @@ export class AppComponent implements OnInit {
 
         this.healthAnalyticsService.getCohort(new CohortCriteria(this.comparison.gender, [])).subscribe(data => {
             this.comparison.cohort = data['totalElements'];
-            this.calculateComorbidityCohort();
         });
 
         this.changeCondition();
@@ -105,13 +104,14 @@ export class AppComponent implements OnInit {
         const encounterCriteria = [];
 
         this.comparison.condition.forEach(item => {
-            item.ecl = this.addECLPrefix(item.ecl);
-            encounterCriteria.push(new EncounterCriteria(item.ecl));
+            if (item.ecl) {
+                item.ecl = this.addECLPrefix(item.ecl);
+                encounterCriteria.push(new EncounterCriteria(item.ecl));
+            }
         });
 
         this.healthAnalyticsService.getCohort(new CohortCriteria(this.comparison.gender, encounterCriteria)).subscribe(data => {
             this.comparison.conditionCohort = data['totalElements'];
-            this.calculateComorbidityCohort();
         });
     }
 
@@ -124,12 +124,6 @@ export class AppComponent implements OnInit {
     // COMPARATOR FUNCTIONS
     addComparator() {
         this.comparison.comparators.push(new Reference(''));
-        for (let i = 0; i < this.comparison.comparators.length; i++) {
-            this.comparison.comparators[i].color = this.colorScheme.domain[i];
-        }
-    }
-    removeComparator(index) {
-        this.comparison.comparators.splice(index, 1);
         for (let i = 0; i < this.comparison.comparators.length; i++) {
             this.comparison.comparators[i].color = this.colorScheme.domain[i];
         }
@@ -148,10 +142,6 @@ export class AppComponent implements OnInit {
     // COMORBIDITY FUNCTIONS
     addComorbidity() {
         this.comparison.comorbidities.push(new Comorbidity([new Reference('')]));
-    }
-
-    removeComorbidity(index) {
-        this.comparison.comorbidities.splice(index, 1);
     }
 
     addComorbidityReference(comorbidity) {
@@ -217,7 +207,6 @@ export class AppComponent implements OnInit {
         reportDefinition.groups.push(comorbidityArray);
 
         // Create new Comparator array for the groups array
-
         const comparatorArray = [];
 
         this.comparison.comparators.forEach(item => {
@@ -231,8 +220,6 @@ export class AppComponent implements OnInit {
 
         this.healthAnalyticsService.getReport(reportDefinition).subscribe(data => {
 
-            let comorbidityCohort = 0;
-
             data['groups'].forEach(item => {
                 this.comparison.comorbidities.forEach(response => {
                     if (response.name === item.name) {
@@ -241,26 +228,10 @@ export class AppComponent implements OnInit {
                 });
 
                 if (item.name === 'Control Group') {
-                    comorbidityCohort = item.patientCount;
+                    this.comparison.comorbidityCohort = item.patientCount;
                 }
             });
-
-            this.calculateComorbidityCohort(comorbidityCohort);
         });
-    }
-
-    calculateComorbidityCohort(comorbidityCohort?) {
-        if (comorbidityCohort) {
-            this.comparison.comorbidityCohort = comorbidityCohort;
-        } else {
-            let count = this.comparison.conditionCohort;
-            this.comparison.comorbidities.forEach(item => {
-
-                count -= item.patientCount;
-            });
-
-            this.comparison.comorbidityCohort = count;
-        }
     }
 
     // GRAPH FUNCTIONS
@@ -329,8 +300,6 @@ export class AppComponent implements OnInit {
     }
 
     buildGraph(dataSet, percentage) {
-        console.log('RAW: ', dataSet);
-
         const graphData = [];
 
         if (!percentage) {
@@ -343,8 +312,6 @@ export class AppComponent implements OnInit {
 
                 graphData.push(new GraphObject( data.name, seriesSet));
             });
-
-            console.log('GRAPHDATA: ', graphData);
         } else {
             dataSet.groups.forEach(data => {
                 const seriesSet = [];
@@ -355,13 +322,9 @@ export class AppComponent implements OnInit {
 
                 graphData.push(new GraphObject( data.name, seriesSet));
             });
-
-            console.log('GRAPHDATA: ', graphData);
         }
         this.graphData = graphData;
     }
-
-
 
     // UTILITY FUNCTIONS
     addECLPrefix(ecl) {
