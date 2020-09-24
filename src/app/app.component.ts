@@ -321,7 +321,7 @@ export class AppComponent implements OnInit {
         reportDefinition.groups.push(comparatorArray);
 
         this.healthAnalyticsService.getReport(reportDefinition).subscribe(data => {
-            if(toggle){
+            if (toggle) {
                 this.percentage = !this.percentage;
             }
             this.buildGraph(data, this.percentage);

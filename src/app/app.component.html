@@ -223,8 +223,13 @@
                 (select)="onSelect($event)"
                 (activate)="onActivate($event)"
                 (deactivate)="onDeactivate($event)">
+                
+                <ng-template #tooltipTemplate let-model="model">
+                    <p>{{model.name}}</p>
+                    <p>{{model.value}}<span *ngIf="percentage">%</span></p>
+                </ng-template>
+                
             </ngx-charts-bar-vertical-2d>
-
         </div>
 
     </div>
