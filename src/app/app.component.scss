@@ -56,20 +56,38 @@ div.input-block {
         cursor: pointer;
         position: relative;
 
-        &.top-icon {
+        &.utility-icon {
             &:hover {
                 color: $white;
             }
         }
 
-        &.close-icon {
+        &.group-delete {
             position: absolute;
-            top: 0;
-            right: 0;
+            top: 0.25rem;
+            right: 0.25rem;
+            font-size: 2rem;
             color: $river-bed;
 
             &:hover {
                 color: $black;
+            }
+        }
+
+        &.input-delete {
+            position: absolute;
+            top: 0.45rem;
+            right: 0.4rem;
+            font-size: 1.8rem;
+            color: $grey;
+
+            &.input-delete-offset {
+                top: 1.45rem;
+                right: 1.4rem;
+            }
+
+            &:hover {
+                color: $river-bed;
             }
         }
     }
@@ -96,18 +114,6 @@ div.input-block {
 
                 label {
                     font-size: 1.4rem;
-                }
-
-                i.text-remove {
-                    position: absolute;
-                    top: 0.45rem;
-                    right: 0.4rem;
-                    font-size: 1.8rem;
-                    color: $grey;
-
-                    &:hover {
-                        color: $river-bed;
-                    }
                 }
             }
         }
