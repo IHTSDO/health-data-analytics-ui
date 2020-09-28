@@ -9,13 +9,9 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HeaderInterceptor } from './interceptors/header.interceptor';
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-
-// PIPE IMPORTS
-import { AuthoringService } from './services/authoring/authoring.service';
 import { MatMenuModule } from '@angular/material/menu';
-
-// SERVICE IMPORTS
-
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AuthoringService } from './services/authoring/authoring.service';
 
 @NgModule({
     declarations: [
@@ -28,7 +24,8 @@ import { MatMenuModule } from '@angular/material/menu';
         BrowserAnimationsModule,
         NgbTypeaheadModule,
         NgxChartsModule,
-        MatMenuModule
+        MatMenuModule,
+        MatTooltipModule
     ],
     providers: [
         AuthoringService,

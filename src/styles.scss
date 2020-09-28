@@ -102,6 +102,13 @@ button, input, textarea {
     margin-bottom: 4rem;
 }
 
+.mat-tooltip {
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: $alto-white !important;
+    max-width: 30rem !important;
+}
+
 ngb-typeahead-window.dropdown-menu {
     button.dropdown-item {
         font-weight: 300;

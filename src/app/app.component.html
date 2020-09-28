@@ -11,9 +11,9 @@
                 <h2 class="col mb-0">Patient Criteria</h2>
                 <!--<p class="col mb-0">840539006</p>-->
                 <div class="float-right mr-4">
-                    <i class="material-icons medium m-2 utility-icon">link</i>
-                    <i class="material-icons medium m-2 utility-icon" (click)="downloadFile()">get_app</i>
-                    <i class="material-icons medium m-2 utility-icon">save</i>
+                    <i class="material-icons medium m-2 utility-icon" matTooltip="Share">link</i>
+                    <i class="material-icons medium m-2 utility-icon" matTooltip="Download" (click)="downloadFile()">get_app</i>
+                    <i class="material-icons medium m-2 utility-icon" matTooltip="Save">save</i>
                 </div>
             </div>
 
@@ -169,7 +169,7 @@
                                        [(ngModel)]="refinement.ecl"
                                        (change)="changeComorbidity(comorbidity)"
                                        [ngbTypeahead]="search">
-                                <i class="material-icons input-delete text-center" (click)="comorbidity.refinements.splice(i, 1)">close</i>
+                                <i class="material-icons input-delete text-center" (click)="comorbidity.refinements.splice(i, 1); changeComorbidity(); assignComorbidityName(comorbidity)">close</i>
                             </div>
                         </ng-container>
                     </div>
@@ -224,8 +224,8 @@
                 (deactivate)="onDeactivate($event)">
 
                 <ng-template #tooltipTemplate let-model="model">
-                    <p>{{model.name}}</p>
-                    <p>{{model.value}}<span *ngIf="percentage">%</span></p>
+                    <p class="mb-0">{{model.name}}</p>
+                    <p class="mb-0">{{model.value | number:'1.0-0'}}<span *ngIf="percentage">%</span></p>
                 </ng-template>
 
             </ngx-charts-bar-vertical-2d>

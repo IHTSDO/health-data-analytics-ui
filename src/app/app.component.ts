@@ -113,6 +113,10 @@ export class AppComponent implements OnInit {
         this.healthAnalyticsService.getCohort(new CohortCriteria(this.comparison.gender, encounterCriteria)).subscribe(data => {
             this.comparison.conditionCohort = data['totalElements'];
         });
+
+        if (this.comparison.comorbidities.length) {
+            this.changeComorbidity();
+        }
     }
 
     exists(name) {
@@ -159,9 +163,11 @@ export class AppComponent implements OnInit {
         comorbidity.name = comorbidity.name.substring(0, comorbidity.name.length - 2);
     }
 
-    changeComorbidity(comorbidity) {
-        this.assignComorbidityName(comorbidity);
-        comorbidity.ecl = this.addECLPrefix(comorbidity.ecl);
+    changeComorbidity(comorbidity?) {
+        if (comorbidity) {
+            this.assignComorbidityName(comorbidity);
+            comorbidity.ecl = this.addECLPrefix(comorbidity.ecl);
+        }
 
         // Create new Report for submission to API
         const reportDefinition = new ReportDefinition(null, [], 'COVID-19 Comorbidity Affects');
