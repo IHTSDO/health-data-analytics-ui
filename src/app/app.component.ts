@@ -179,6 +179,7 @@ export class AppComponent implements OnInit {
 
         // Create new Comorbidity array for the groups array
         const comorbidityArray = [];
+        const controlGroupExclusionCriteria = [];
 
         this.comparison.comorbidities.forEach(item => {
             const comorbidityEncounterCriteria = [];
@@ -188,22 +189,14 @@ export class AppComponent implements OnInit {
                 comorbidityEncounterCriteria.push(new EncounterCriteria(nestedItem.ecl));
             });
 
-            comorbidityArray.push(new SubReportDefinition(new CohortCriteria(
-                this.comparison.gender, comorbidityEncounterCriteria), item.name));
+            const groupCohortCriteria = new CohortCriteria(this.comparison.gender, comorbidityEncounterCriteria);
+            comorbidityArray.push(new SubReportDefinition(groupCohortCriteria, item.name));
+            controlGroupExclusionCriteria.push(groupCohortCriteria);
         });
 
         // Create new control group object for comorbidity array
-        const controlGroupEncounterCriteria = [];
-
-        this.comparison.comorbidities.forEach(item => {
-
-            item.refinements.forEach(nestedItem => {
-                controlGroupEncounterCriteria.push(new EncounterCriteria(nestedItem.ecl, false));
-            });
-        });
-
-        const controlGroup = new SubReportDefinition(new CohortCriteria(this.comparison.gender, controlGroupEncounterCriteria), 'Control Group');
-
+        const controlGroupCriteria = new CohortCriteria(null, [], controlGroupExclusionCriteria);
+        const controlGroup = new SubReportDefinition(controlGroupCriteria, 'Control Group');
         comorbidityArray.unshift(controlGroup);
 
         reportDefinition.groups.push(comorbidityArray);

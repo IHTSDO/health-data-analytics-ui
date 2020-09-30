@@ -23,11 +23,14 @@ export class SubReportDefinition {
 export class CohortCriteria {
     gender: string;
     encounterCriteria: EncounterCriteria[];
+    exclusionCriteria: CohortCriteria[];
 
-    constructor(gender, encounterCriteria) {
+    constructor(gender, encounterCriteria, exclusionCriteria?) {
         this.gender = gender;
         this.encounterCriteria = encounterCriteria;
+        this.exclusionCriteria = exclusionCriteria;
     }
+
 }
 
 export class EncounterCriteria {
