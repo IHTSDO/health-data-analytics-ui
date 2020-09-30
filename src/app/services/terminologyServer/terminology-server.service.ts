@@ -22,7 +22,7 @@ export class TerminologyServerService {
 
     getTypeahead(term) {
         return this.http
-            .get('/browser/' + this.branchPath +
+            .get('/snowstorm/snomed-ct/' + this.branchPath +
                 '/concepts?activeFilter=true&termActive=true&limit=20&term=' + term)
             .pipe(map(responseData => {
                 const typeaheads = [];
@@ -36,7 +36,7 @@ export class TerminologyServerService {
     }
 
     getConcept(id): Observable<object> {
-        return this.http.get<object>('/browser/' + this.branchPath
+        return this.http.get<object>('/snowstorm/snomed-ct/' + this.branchPath
             + '/concepts/' + id);
     }
 }
