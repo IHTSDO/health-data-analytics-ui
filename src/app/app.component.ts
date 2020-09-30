@@ -163,12 +163,8 @@ export class AppComponent implements OnInit {
         comorbidity.name = comorbidity.name.substring(0, comorbidity.name.length - 2);
     }
 
-    changeComorbidity(comorbidity?) {
-        if (comorbidity) {
-            this.assignComorbidityName(comorbidity);
-            comorbidity.ecl = this.addECLPrefix(comorbidity.ecl);
-        }
 
+    getReportRequest() {
         // Create new Report for submission to API
         const reportDefinition = new ReportDefinition(null, [], 'COVID-19 Comorbidity Affects');
 
@@ -223,6 +219,16 @@ export class AppComponent implements OnInit {
         });
 
         reportDefinition.groups.push(comparatorArray);
+        return reportDefinition;
+    }
+
+    changeComorbidity(comorbidity?) {
+        if (comorbidity) {
+            this.assignComorbidityName(comorbidity);
+            comorbidity.ecl = this.addECLPrefix(comorbidity.ecl);
+        }
+
+        const reportDefinition = this.getReportRequest();
 
         this.healthAnalyticsService.getReport(reportDefinition).subscribe(data => {
 
@@ -242,60 +248,8 @@ export class AppComponent implements OnInit {
 
     // GRAPH FUNCTIONS
     showInsight(toggle) {
-        // Create new Report for submission to API
-        const reportDefinition = new ReportDefinition(null, [], 'COVID-19 Comorbidity Affects');
 
-        // Create new Criteria for the Report
-        const encounterCriteria = [];
-
-        this.comparison.condition.forEach(item => {
-            encounterCriteria.push(new EncounterCriteria(item.ecl));
-        });
-
-        reportDefinition.criteria = new CohortCriteria(this.comparison.gender, encounterCriteria);
-
-        // Create new Comorbidity array for the groups array
-        const comorbidityArray = [];
-
-        this.comparison.comorbidities.forEach(item => {
-            const comorbidityEncounterCriteria = [];
-
-            item.refinements.forEach(nestedItem => {
-                comorbidityEncounterCriteria.push(new EncounterCriteria(nestedItem.ecl));
-            });
-
-            comorbidityArray.push(new SubReportDefinition(new CohortCriteria(
-                this.comparison.gender, comorbidityEncounterCriteria), item.name));
-        });
-
-        // Create new control group object for comorbidity array
-        const controlGroupEncounterCriteria = [];
-
-        this.comparison.comorbidities.forEach(item => {
-
-            item.refinements.forEach(nestedItem => {
-                controlGroupEncounterCriteria.push(new EncounterCriteria(nestedItem.ecl, false));
-            });
-        });
-
-        const controlGroup = new SubReportDefinition(new CohortCriteria(this.comparison.gender, controlGroupEncounterCriteria), 'Control Group');
-
-        comorbidityArray.unshift(controlGroup);
-
-        reportDefinition.groups.push(comorbidityArray);
-
-        // Create new Comparator array for the groups array
-
-        const comparatorArray = [];
-
-        this.comparison.comparators.forEach(item => {
-            if (item.ecl) {
-                comparatorArray.push(new SubReportDefinition(new CohortCriteria(
-                    this.comparison.gender, [new EncounterCriteria(item.ecl)]), item.name));
-            }
-        });
-
-        reportDefinition.groups.push(comparatorArray);
+        const reportDefinition = this.getReportRequest();
 
         this.healthAnalyticsService.getReport(reportDefinition).subscribe(data => {
             if (toggle) {
