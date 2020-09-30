@@ -10,10 +10,10 @@ export class HealthAnalyticsService {
     }
 
     getCohort(params) {
-        return this.http.post('/health-analytics/cohorts/select', params);
+        return this.http.post('/health-analytics-api/cohorts/select', params);
     }
 
     getReport(params) {
-        return this.http.post('/health-analytics/report', params);
+        return this.http.post('/health-analytics-api/report', params);
     }
 }
