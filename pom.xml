@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ihtsdo.otf</groupId>
     <artifactId>health-data-analytics-demonstrator</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
     <properties>
         <packageName>${project.artifactId}</packageName>
     </properties>
