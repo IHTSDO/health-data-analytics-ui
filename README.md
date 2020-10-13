@@ -1,3 +1,6 @@
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/IHTSDO/health-data-analytics-ui.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/IHTSDO/health-data-analytics-ui/context:javascript)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/IHTSDO/health-data-analytics-ui.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/IHTSDO/health-data-analytics-ui/alerts/)
+
 # Health Data Analytics Demonstrator
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.1.3.
