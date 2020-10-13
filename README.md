@@ -16,7 +16,43 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `ng test` to execute the unit tests via Jest.
+
+## Example nginx configuration
+
+The / location is used to proxy your configured port to the angular live reload server started via ng serve. 
+
+```
+user 'details here';
+worker_processes  1;
+
+events {
+    worker_connections  1024;
+}
+ 
+http {
+    server {
+        listen      ****;
+
+        location / {
+            proxy_pass http://127.0.0.1:4200;
+        }
+        
+        location /concepts {
+            proxy_pass localSnowstormInstance;
+        }
+        
+        location /health-analytics-api {
+            proxy_pass localHealthDataInstance;
+        }
+    }	
+}
+
+```
+
+## Back end dependencies 
+
+This Frontend application makes use of [Snowstorm](https://github.com/IHTSDO/snowstorm) for concept lookup and [Health Data Analytics](https://github.com/IHTSDO/health-data-analytics) for report generation and analysis.
 
 ## Further help
 
