@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/IHTSDO/health-data-analytics-ui.svg?branch=develop)](https://travis-ci.org/IHTSDO/health-data-analytics-ui)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/IHTSDO/health-data-analytics-ui.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/IHTSDO/health-data-analytics-ui/context:javascript)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/IHTSDO/health-data-analytics-ui.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/IHTSDO/health-data-analytics-ui/alerts/)
 
